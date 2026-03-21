@@ -107,7 +107,9 @@ export default function CreateEvent() {
     <div className="min-h-screen bg-[#fcf8f7] flex flex-col items-center font-body text-[#1f1a17] pb-32">
       
       <header className="w-full max-w-md flex flex-col items-center justify-center p-6 pb-2 pt-8">
-        <img src="/logo.png" alt="Asadete Logo" className="w-20 h-20 mb-3 drop-shadow-md rounded-2xl" />
+        <div className="bg-gradient-to-br from-white to-[#fcf8f7] w-20 h-20 mb-3 rounded-[1.5rem] flex items-center justify-center shadow-md border border-[#e8ded8]/50">
+           <Grill className="text-[#b83a0a]" fill="#b83a0a" size={40} />
+        </div>
         <span className="font-heading font-extrabold text-3xl tracking-tight text-[#b83a0a] italic leading-none">Asadete</span>
         <span className="text-[#5a504b] font-bold text-[10px] tracking-widest uppercase mt-2">El DT de tu asado</span>
       </header>
