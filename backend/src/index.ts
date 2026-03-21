@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 
 // ==========================================
 // 4.1 Crear evento
-app.post('/events', async (req, res) => {
+app.post('/api/events', async (req, res) => {
   try {
     const { name, budget } = req.body;
     if (!name) return res.status(400).json({ error: "Name is required" });
@@ -33,7 +33,7 @@ app.post('/events', async (req, res) => {
 });
 
 // 4.2 Unirse al evento
-app.post('/events/:share_token/join', async (req, res) => {
+app.post('/api/events/:share_token/join', async (req, res) => {
   try {
     const { share_token } = req.params;
     const { name, alias, expenses, admin_token } = req.body; 
@@ -95,7 +95,7 @@ app.post('/events/:share_token/join', async (req, res) => {
 });
 
 // 4.3 Obtener evento
-app.get('/events/:share_token', async (req, res) => {
+app.get('/api/events/:share_token', async (req, res) => {
   try {
     const event = await prisma.event.findUnique({
       where: { share_token: req.params.share_token },
@@ -114,7 +114,7 @@ app.get('/events/:share_token', async (req, res) => {
 });
 
 // 4.5 Liquidar evento (Optimized Transfers)
-app.post('/events/:share_token/settle', async (req, res) => {
+app.post('/api/events/:share_token/settle', async (req, res) => {
   try {
     const event = await prisma.event.findUnique({
       where: { share_token: req.params.share_token },
@@ -210,7 +210,7 @@ app.post('/events/:share_token/settle', async (req, res) => {
 });
 
 // 4.7 Marcar pago POST /debts/:id/pay
-app.post('/debts/:id/pay', async (req, res) => {
+app.post('/api/debts/:id/pay', async (req, res) => {
   try {
     const debt = await prisma.debt.update({
       where: { id: req.params.id },
@@ -223,7 +223,7 @@ app.post('/debts/:id/pay', async (req, res) => {
 });
 
 // 4.8 Confirmar pago POST /debts/:id/confirm
-app.post('/debts/:id/confirm', async (req, res) => {
+app.post('/api/debts/:id/confirm', async (req, res) => {
   try {
     const debt = await prisma.debt.update({
       where: { id: req.params.id },
@@ -248,7 +248,7 @@ app.post('/debts/:id/confirm', async (req, res) => {
 });
 
 // 4.9 Revertir liquidacion
-app.post('/events/:share_token/revert', async (req, res) => {
+app.post('/api/events/:share_token/revert', async (req, res) => {
   try {
     const event = await prisma.event.findUnique({ where: { share_token: req.params.share_token } });
     if (!event) return res.status(404).json({ error: "Event not found" });
@@ -265,7 +265,7 @@ app.post('/events/:share_token/revert', async (req, res) => {
 });
 
 // 4.10 Toggle Consumer
-app.post('/items/:id/toggle', async (req, res) => {
+app.post('/api/items/:id/toggle', async (req, res) => {
   try {
     const { participant_id } = req.body;
     const item = await prisma.expenseItem.findUnique({
