@@ -1,0 +1,34 @@
+{
+  "id": "asado-123",
+  "title": "Asadete de Fin de Año",
+  "date": "2026-03-22T20:00:00Z",
+  "participants": ["Juan", "Matias", "Fede", "Lucas"],
+  "expenses": [
+    {
+      "id": "exp-1",
+      "description": "Asado de Tira y Vacío",
+      "amount": 25000.0,
+      "payer_name": "Juan"
+    },
+    {
+      "id": "exp-2",
+      "description": "Carbón y Leña",
+      "amount": 3500.0,
+      "payer_name": "Matias"
+    },
+    {
+      "id": "exp-3",
+      "description": "Fernet y Coca Cola",
+      "amount": 12000.0,
+      "payer_name": "Fede"
+    }
+  ],
+  "total_pool": 40500.0,
+  "per_person": 10125.0,
+  "balances": {
+    "Juan": 14875.0,
+    "Matias": -6625.0,
+    "Fede": -1875.0,
+    "Lucas": -10125.0
+  }
+}
