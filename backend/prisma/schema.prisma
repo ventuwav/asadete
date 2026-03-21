@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id           String        @id @default(uuid())
+  name         String
+  budget       Float         @default(0)
+  status       String        @default("open")
+  share_token  String        @unique @default(uuid())
+  admin_token  String?
+  created_at   DateTime      @default(now())
+  
+  participants Participant[]
+  expenses     Expense[]
+  debts        Debt[]
+}
+
+model Participant {
+  id                String   @id @default(uuid())
+  event_id          String
+  name              String
+  alias             String?
+  participant_token String   @unique @default(uuid())
+  created_at        DateTime @default(now())
+  is_creator        Boolean  @default(false)
+
+  event        Event     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  expenses     Expense[]
+  debts_owed   Debt[]    @relation("Debtor")
+  debts_to_receive Debt[]  @relation("Creditor")
+  consumed_items ExpenseItem[]
+}
+
+model Expense {
+  id             String        @id @default(uuid())
+  participant_id String
+  event_id       String
+  total_amount   Float
+  created_at     DateTime      @default(now())
+
+  participant Participant   @relation(fields: [participant_id], references: [id], onDelete: Cascade)
+  event       Event         @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  items       ExpenseItem[]
+}
+
+model ExpenseItem {
+  id         String @id @default(uuid())
+  expense_id String
+  name       String
+  amount     Float
+
+  expense Expense @relation(fields: [expense_id], references: [id], onDelete: Cascade)
+  consumers Participant[]
+}
+
+model Debt {
+  id                  String @id @default(uuid())
+  event_id            String
+  from_participant_id String
+  to_participant_id   String
+  amount              Float
+  status              String @default("pending") // pending | paid | confirmed
+
+  event           Event       @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  from_participant Participant @relation("Debtor", fields: [from_participant_id], references: [id], onDelete: Cascade)
+  to_participant   Participant @relation("Creditor", fields: [to_participant_id], references: [id], onDelete: Cascade)
+}
