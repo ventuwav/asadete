@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "prisma generate",
+    "dev": "nodemon -w src -e ts -x tsx src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
