@@ -36,20 +36,51 @@ app.post('/api/events', async (req, res) => {
 app.post('/api/events/:share_token/join', async (req, res) => {
   try {
     const { share_token } = req.params;
-    const { name, alias, expenses, admin_token } = req.body; 
+    const { name, alias, expenses, admin_token, participant_token } = req.body; 
+    
+    // Validaciones
+    if (!name) return res.status(400).json({ error: "Name is required" });
 
-    const event = await prisma.event.findUnique({ where: { share_token } });
+    const event = await prisma.event.findUnique({
+      where: { share_token }
+    });
     if (!event) return res.status(404).json({ error: "Event not found" });
-    if (event.status !== "open") return res.status(400).json({ error: "Event is no longer open" });
+    if (event.status !== 'open') return res.status(400).json({ error: "Event is closed" });
+
+    let participant;
+    
+    if (participant_token) {
+       participant = await prisma.participant.findUnique({ where: { participant_token } });
+       if (!participant || participant.event_id !== event.id) return res.status(401).json({error: "Invalid token"});
+       
+       await prisma.participant.update({
+          where: { id: participant.id },
+          data: { name, alias: alias || null }
+       });
+
+       // Destroy previous expenses and items for this participant to re-write them
+       await prisma.expenseItem.deleteMany({
+          where: { expense: { participant_id: participant.id, event_id: event.id } }
+       });
+       await prisma.expense.deleteMany({
+          where: { participant_id: participant.id, event_id: event.id }
+       });
+    } else {
+      const existingParticipants = await prisma.participant.findMany({ where: { event_id: event.id } });
+      // Authorization: Grant DT if they possess the crypto token, or if they are genuinely the first physical participant
+      const is_creator = Boolean((admin_token && admin_token === event.admin_token) || existingParticipants.length === 0);
+
+      participant = await prisma.participant.create({
+        data: {
+          event_id: event.id,
+          name,
+          alias: alias || null,
+          is_creator
+        }
+      });
+    }
 
     const existingParticipants = await prisma.participant.findMany({ where: { event_id: event.id } });
-    
-    // Authorization: Grant DT if they possess the crypto token, or if they are genuinely the first physical participant
-    const is_creator = Boolean((admin_token && admin_token === event.admin_token) || existingParticipants.length === 0);
-
-    const participant = await prisma.participant.create({
-      data: {
-        event_id: event.id,
         name,
         alias,
         is_creator

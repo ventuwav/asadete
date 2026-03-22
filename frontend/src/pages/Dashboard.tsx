@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { User, Receipt, Plus, Check, X, ArrowLeft, Heart, ShoppingBag, Share2, PanelTopClose, Wallet, History } from 'lucide-react';
 
 const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: any) => (
@@ -14,6 +14,7 @@ const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: an
 
 export default function Dashboard() {
   const { shareToken } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copiedNav, setCopiedNav] = useState(false);
@@ -181,7 +182,10 @@ export default function Dashboard() {
             <div className="mb-8 animate-in slide-in-from-left-4 fade-in duration-300">
               <div className="flex justify-between items-center mb-4 px-1">
                 <h3 className="text-xl font-heading font-extrabold leading-6">Personalizá<br/>tu cuota</h3>
-                <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b] bg-[#e8ded8]/50 px-2 py-1 rounded-md">Opcional</span>
+                <div className="flex gap-2">
+                  <button onClick={() => navigate(`/e/${shareToken}/join?edit=true`)} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar Gastos</button>
+                  {/* <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b] bg-[#e8ded8]/50 px-2 py-1 rounded-md">Opcional</span> */}
+                </div>
               </div>
               <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-3 shadow-sm">
                 <p className="text-xs text-[#7a706b] mb-4 font-medium leading-relaxed">Destildá lo que no consumiste tocando el ítem. Tu cuota se va a descontar proporcionalmente y el resto la absorberá.</p>

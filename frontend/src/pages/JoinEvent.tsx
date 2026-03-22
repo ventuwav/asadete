@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Wallet, Receipt, Share2, Calendar, CircleOff, ShoppingCart, Plus, X } from 'lucide-react';
 
 const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: any) => (
@@ -15,6 +15,10 @@ const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: an
 export default function JoinEvent() {
   const { shareToken } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isEditing = searchParams.get('edit') === 'true';
+  const participantToken = localStorage.getItem(`asadete_${shareToken}`);
 
   const [name, setName] = useState('');
   const [alias, setAlias] = useState('');
@@ -36,6 +40,33 @@ export default function JoinEvent() {
     };
     fetchEvent();
   }, [shareToken]);
+
+  useEffect(() => {
+    if (!isEditing && participantToken) {
+       navigate(`/e/${shareToken}`);
+    }
+  }, [isEditing, participantToken, navigate, shareToken]);
+
+  useEffect(() => {
+    if (eventData && isEditing && participantToken) {
+       const me = eventData.participants.find((p:any) => p.participant_token === participantToken);
+       if (me) {
+          setName(me.name);
+          if (me.alias) setAlias(me.alias);
+          
+          const myExpenses = eventData.expenses.filter((e:any) => e.participant_id === me.id);
+          if (myExpenses.length > 0) {
+             setHasExpense(true);
+             const myItems = myExpenses.flatMap((e:any) => e.items);
+             if (myItems.length > 0) {
+                setItems(myItems.map((it:any) => ({ name: it.name, amount: it.amount.toString() })));
+             }
+          } else {
+             setHasExpense(false);
+          }
+       }
+    }
+  }, [eventData, isEditing, participantToken]);
 
   const handleCopyNav = async () => {
     const url = `${window.location.host}/e/${shareToken}/join`;
@@ -79,7 +110,13 @@ export default function JoinEvent() {
       const joinRes = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, alias: alias || undefined, expenses: expensesPayload, admin_token })
+        body: JSON.stringify({ 
+          name, 
+          alias: alias || undefined, 
+          expenses: expensesPayload, 
+          admin_token,
+          participant_token: isEditing ? participantToken : undefined
+        })
       });
       const joinData = await joinRes.json();
       
