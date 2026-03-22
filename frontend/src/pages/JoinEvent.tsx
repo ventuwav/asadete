@@ -35,7 +35,7 @@ export default function JoinEvent() {
   const [copiedNav, setCopiedNav] = useState(false);
 
   useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing || !prefill?.name) {
         const fetchEvent = async () => {
           try {
             const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`);
@@ -45,7 +45,28 @@ export default function JoinEvent() {
         };
         fetchEvent();
     }
-  }, [shareToken, isEditing]);
+  }, [shareToken, isEditing, prefill?.name]);
+
+  useEffect(() => {
+    if (eventData && isEditing && participantToken && !prefill?.name) {
+       const me = eventData.participants.find((p:any) => p.participant_token === participantToken);
+       if (me) {
+          setName(me.name);
+          if (me.alias) setAlias(me.alias);
+          
+          const myExpenses = eventData.expenses.filter((e:any) => e.participant_id === me.id);
+          if (myExpenses.length > 0) {
+             setHasExpense(true);
+             const myItems = myExpenses.flatMap((e:any) => e.items);
+             if (myItems.length > 0) {
+                setItems(myItems.map((it:any) => ({ name: it.name, amount: it.amount.toString() })));
+             }
+          } else {
+             setHasExpense(false);
+          }
+       }
+    }
+  }, [eventData, isEditing, participantToken, prefill?.name]);
 
   useEffect(() => {
     if (!isEditing && participantToken) {
