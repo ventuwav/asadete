@@ -81,11 +81,6 @@ app.post('/api/events/:share_token/join', async (req, res) => {
     }
 
     const existingParticipants = await prisma.participant.findMany({ where: { event_id: event.id } });
-        name,
-        alias,
-        is_creator
-      }
-    });
 
     const allParticipantIds = [...existingParticipants.map(p => ({ id: p.id })), { id: participant.id }];
 

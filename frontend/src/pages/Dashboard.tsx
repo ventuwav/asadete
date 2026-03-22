@@ -183,8 +183,11 @@ export default function Dashboard() {
               <div className="flex justify-between items-center mb-4 px-1">
                 <h3 className="text-xl font-heading font-extrabold leading-6">Personalizá<br/>tu cuota</h3>
                 <div className="flex gap-2">
-                  <button onClick={() => navigate(`/e/${shareToken}/join?edit=true`)} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar Gastos</button>
-                  {/* <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b] bg-[#e8ded8]/50 px-2 py-1 rounded-md">Opcional</span> */}
+                  <button onClick={() => {
+                        const myExp = data.expenses.filter((e:any) => e.participant_id === currentUser?.id);
+                        const myItems = myExp.flatMap((e:any) => e.items).map((it:any) => ({ name: it.name, amount: it.amount.toString() }));
+                        navigate(`/e/${shareToken}/join?edit=true`, { state: { name: currentUser?.name, alias: currentUser?.alias, items: myItems } });
+                  }} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar Gastos</button>
                 </div>
               </div>
               <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-3 shadow-sm">
