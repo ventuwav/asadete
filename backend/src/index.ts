@@ -85,30 +85,34 @@ app.post('/api/events/:share_token/join', async (req, res) => {
     const allParticipantIds = [...existingParticipants.map(p => ({ id: p.id })), { id: participant.id }];
 
     const existingItems = await prisma.expenseItem.findMany({ where: { expense: { event_id: event.id } } });
-    for (const item of existingItems) {
-      await prisma.expenseItem.update({
-        where: { id: item.id },
-        data: { consumers: { connect: { id: participant.id } } }
-      });
-    }
+    await Promise.all(
+      existingItems.map(item =>
+        prisma.expenseItem.update({
+          where: { id: item.id },
+          data: { consumers: { connect: { id: participant.id } } }
+        })
+      )
+    );
 
     if (expenses && Array.isArray(expenses)) {
-      for (const e of expenses) {
-        await prisma.expense.create({
-          data: {
-            participant_id: participant.id,
-            event_id: event.id,
-            total_amount: e.total_amount,
-            items: {
-              create: (e.items || []).map((it:any) => ({
-                name: it.name,
-                amount: it.amount,
-                consumers: { connect: allParticipantIds }
-              }))
+      await Promise.all(
+        expenses.map(e =>
+          prisma.expense.create({
+            data: {
+              participant_id: participant.id,
+              event_id: event.id,
+              total_amount: e.total_amount,
+              items: {
+                create: (e.items || []).map((it:any) => ({
+                  name: it.name,
+                  amount: it.amount,
+                  consumers: { connect: allParticipantIds }
+                }))
+              }
             }
-          }
-        });
-      }
+          })
+        )
+      );
     }
 
     res.json({
