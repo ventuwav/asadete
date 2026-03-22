@@ -67,13 +67,36 @@ export default function Dashboard() {
   };
   const toggleConsumer = async (itemId: string) => {
     if (!currentUser) return;
-    await fetch(`${import.meta.env.VITE_API_URL || ''}/api/items/${itemId}/toggle`, {
+    // Optimistic update: flip the consumer list immediately
+    setData((prev: any) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        expenses: prev.expenses.map((e: any) => ({
+          ...e,
+          items: e.items.map((it: any) => {
+            if (it.id !== itemId) return it;
+            const alreadyIn = it.consumers.some((c: any) => c.id === currentUser.id);
+            return {
+              ...it,
+              consumers: alreadyIn
+                ? it.consumers.filter((c: any) => c.id !== currentUser.id)
+                : [...it.consumers, { id: currentUser.id }]
+            };
+          })
+        }))
+      };
+    });
+    // Fire & forget, then reconcile with server truth
+    fetch(`${import.meta.env.VITE_API_URL || ''}/api/items/${itemId}/toggle`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ participant_id: currentUser.id })
-    });
-    const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`);
-    setData(await res.json());
+    }).then(() =>
+      fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`)
+        .then(r => r.json())
+        .then(d => setData(d))
+    );
   };
 
   const markPaid = async (debtId: string) => await fetch(`${import.meta.env.VITE_API_URL || ''}/api/debts/${debtId}/pay`, { method: 'POST' });
@@ -116,7 +139,7 @@ export default function Dashboard() {
   );
 
   const renderHeader = (isSaldado = false) => (
-    <header className="flex items-center justify-between p-6 pb-2">
+    <header className="flex items-center justify-between px-6 pt-[max(1.5rem,env(safe-area-inset-top,1.5rem))] pb-2">
       <div className="flex items-center gap-2">
          {isSaldado ? (
             <Link to="/" className="w-10 h-10 rounded-full bg-[#f2ece9] flex items-center justify-center"><ArrowLeft size={20}/></Link>
@@ -151,7 +174,7 @@ export default function Dashboard() {
         {/* <Hero state="open" /> */}
         {renderHeader()} {/* Keeping renderHeader for now as Navbar/Hero are not provided */}
 
-        <div className="px-5 -mt-6 relative z-10 w-full max-w-md mx-auto flex-1">
+        <div className="px-5 mt-2 relative z-10 w-full max-w-md mx-auto flex-1">
           
           <div className="mb-8">
             <div className="flex justify-between items-end mb-2">
