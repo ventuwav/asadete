@@ -36,7 +36,7 @@ export default function Dashboard() {
       setLoading(false);
     };
     fetchEvent();
-    const interval = setInterval(fetchEvent, 3000);
+    const interval = setInterval(fetchEvent, 10000);
     return () => clearInterval(interval);
   }, [shareToken]);
 
@@ -150,9 +150,19 @@ export default function Dashboard() {
             <><Grill className="text-[#b83a0a]" fill="#b83a0a" size={24} /><span className="font-heading font-bold text-lg tracking-tight text-[#b83a0a] italic">Asadete</span></>
          )}
       </div>
-      <div className="w-10 h-10 rounded-full bg-[#e8ded8] flex items-center justify-center">
-         <User size={18} fill="currentColor" className="text-[#7a706b]"/>
-      </div>
+     {/* DT badge or default avatar */}
+      {currentUser?.is_creator && adminToken ? (
+        <div className="flex items-center gap-2">
+          <div className="relative flex flex-col items-center justify-center w-12 h-12 bg-[#b83a0a] rounded-b-full rounded-t-[30%] shadow-md">
+            <span className="text-white text-[8px] font-black tracking-[0.2em] uppercase leading-none mt-1">DT</span>
+            <div className="absolute -bottom-1 w-4 h-1 bg-[#b83a0a] rounded-b-sm" />
+          </div>
+        </div>
+      ) : (
+        <div className="w-10 h-10 rounded-full bg-[#e8ded8] flex items-center justify-center">
+          <User size={18} fill="currentColor" className="text-[#7a706b]"/>
+        </div>
+      )}
     </header>
   );
 
@@ -226,7 +236,10 @@ export default function Dashboard() {
                         const myExp = data.expenses.filter((e:any) => e.participant_id === currentUser?.id);
                         const myItems = myExp.flatMap((e:any) => e.items).map((it:any) => ({ name: it.name, amount: it.amount.toString() }));
                         navigate(`/e/${shareToken}/join?edit=true`, { state: { name: currentUser?.name, alias: currentUser?.alias, items: myItems } });
-                  }} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar Gastos</button>
+                  }} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar mis gastos</button>
+                  {adminToken && currentUser?.is_creator && (
+                    <button onClick={() => setOpenTab('resumen')} className="text-[10px] font-bold tracking-widest uppercase text-[#7a706b] bg-[#e8ded8]/50 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#e8ded8] transition-colors border border-[#d9d2ce]">✏️ Gastos ajenos</button>
+                  )}
                 </div>
               </div>
               <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-3 shadow-sm">
