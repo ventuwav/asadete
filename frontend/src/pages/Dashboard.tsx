@@ -454,15 +454,30 @@ export default function Dashboard() {
                     const creditor = data.participants.find((p: any) => p.id === debt.to_participant_id);
                     return (
                       <div key={debt.id} className={`flex items-center justify-between rounded-xl p-3 gap-3 ${isConfirmed ? 'bg-white/5 opacity-50' : 'bg-white/10'}`}>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="text-white font-bold text-[12px] truncate">{debt.from_participant.name}</span>
-                            <span className="text-white/40 text-[10px]">→</span>
-                            <span className="text-white font-bold text-[12px] truncate">{debt.to_participant.name}</span>
+                        <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                          {/* Botón Checkbox para DT */}
+                          <button 
+                            onClick={() => !isConfirmed && confirmPaid(debt.id)}
+                            disabled={isConfirmed}
+                            className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all flex-shrink-0 ${
+                              isConfirmed 
+                                ? 'bg-[#1c7327] border-[#1c7327] text-white' 
+                                : 'border-white/20 hover:border-[#b83a0a] bg-white/5 hover:bg-[#b83a0a]/10 text-white/30 hover:text-white'
+                            }`}
+                          >
+                            {isConfirmed && <Check size={12} strokeWidth={4} />}
+                          </button>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-white font-bold text-[12px] truncate">{debt.from_participant.name}</span>
+                              <span className="text-white/40 text-[10px]">→</span>
+                              <span className="text-white font-bold text-[12px] truncate">{debt.to_participant.name}</span>
+                            </div>
+                            {creditor?.alias && (
+                              <p className="text-white/50 text-[10px] font-medium mt-0.5 truncate">{creditor.alias}</p>
+                            )}
                           </div>
-                          {creditor?.alias && (
-                            <p className="text-white/50 text-[10px] font-medium mt-0.5 truncate">{creditor.alias}</p>
-                          )}
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           <span className="text-white font-heading font-extrabold text-[14px]">${debt.amount.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
