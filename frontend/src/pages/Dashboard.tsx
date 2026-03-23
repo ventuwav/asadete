@@ -222,6 +222,22 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* DT Admin strip — always visible for creators */}
+          {adminToken && currentUser?.is_creator && (
+            <div className="flex items-center justify-between bg-[#1f1a17] rounded-[1.25rem] px-5 py-3.5 mb-5">
+              <div className="flex items-center gap-2">
+                <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] px-2 py-1 rounded-md">DT</span>
+                <span className="text-white/80 text-[11px] font-bold">Modo Director Técnico</span>
+              </div>
+              <button
+                onClick={() => setOpenTab('resumen')}
+                className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase text-white bg-white/15 px-3 py-1.5 rounded-[0.5rem] hover:bg-white/25 transition-colors"
+              >
+                <Pencil size={12} /> Editar gastos
+              </button>
+            </div>
+          )}
+
           <div className="flex bg-[#e8ded8] p-1 rounded-[1rem] mb-8 relative">
              <button onClick={() => setOpenTab('consumos')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] z-10 transition-colors ${openTab === 'consumos' ? 'text-[#2b2725] bg-white shadow-sm' : 'text-[#7a706b] hover:text-[#2b2725]'}`}>Tu Consumo</button>
              <button onClick={() => setOpenTab('resumen')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] z-10 transition-colors ${openTab === 'resumen' ? 'text-[#2b2725] bg-white shadow-sm' : 'text-[#7a706b] hover:text-[#2b2725]'}`}>Asignación</button>
@@ -237,9 +253,6 @@ export default function Dashboard() {
                         const myItems = myExp.flatMap((e:any) => e.items).map((it:any) => ({ name: it.name, amount: it.amount.toString() }));
                         navigate(`/e/${shareToken}/join?edit=true`, { state: { name: currentUser?.name, alias: currentUser?.alias, items: myItems } });
                   }} className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors">Editar mis gastos</button>
-                  {adminToken && currentUser?.is_creator && (
-                    <button onClick={() => setOpenTab('resumen')} className="text-[10px] font-bold tracking-widest uppercase text-[#7a706b] bg-[#e8ded8]/50 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#e8ded8] transition-colors border border-[#d9d2ce]">✏️ Gastos ajenos</button>
-                  )}
                 </div>
               </div>
               <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-3 shadow-sm">
