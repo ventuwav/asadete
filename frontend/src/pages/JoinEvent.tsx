@@ -19,6 +19,7 @@ export default function JoinEvent() {
   const searchParams = new URLSearchParams(location.search);
   const isEditing = searchParams.get('edit') === 'true';
   const prefill = location.state as any;
+  const prefillEventName = prefill?.eventName || '';
 
   const participantToken = localStorage.getItem(`asadete_${shareToken}`);
 
@@ -178,7 +179,7 @@ export default function JoinEvent() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
             <div className="absolute bottom-6 left-6 right-6">
                 <h1 className="text-[32px] font-heading font-bold text-white leading-tight drop-shadow-md">
-                    {eventData ? eventData.name : 'Cargando asado...'}
+                    {prefillEventName || eventData?.name || 'Cargando asado...'}
                 </h1>
                 <p className="text-white/80 text-xs mt-2 flex items-center gap-1.5 font-medium"><Calendar size={13}/> Hoy, en breve</p>
             </div>

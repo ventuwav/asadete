@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Copy, Check, Users, Receipt, Link as LinkIcon, Wallet, Share2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -180,9 +180,12 @@ export default function CreateEvent() {
                 </div>
 
                 <div className="pb-32">
-                    <Link to={`/e/${createdEvent.share_token}/join`} className="w-full py-5 bg-[#b83a0a] text-white rounded-[1.25rem] text-[15px] font-heading font-bold shadow-[0_8px_30px_rgba(184,58,10,0.3)] flex justify-center items-center gap-2 hover:bg-[#8a2905] transition-all active:scale-[0.98]">
+                    <button
+                      onClick={() => navigate(`/e/${createdEvent.share_token}/join`, { state: { eventName: name } })}
+                      className="w-full py-5 bg-[#b83a0a] text-white rounded-[1.25rem] text-[15px] font-heading font-bold shadow-[0_8px_30px_rgba(184,58,10,0.3)] flex justify-center items-center gap-2 hover:bg-[#8a2905] transition-all active:scale-[0.98]"
+                    >
                         Sumarme yo también <Grill size={20} className="text-white"/>
-                    </Link>
+                    </button>
                 </div>
 
             </div>
