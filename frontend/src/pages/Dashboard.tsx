@@ -23,7 +23,9 @@ export default function Dashboard() {
   const [openTab, setOpenTab] = useState<'consumos' | 'resumen'>('consumos');
   
   const participantToken = localStorage.getItem(`asadete_${shareToken}`);
-  const adminToken = localStorage.getItem(`admin_token_${shareToken}`);
+  const [adminToken, setAdminToken] = useState<string | null>(
+    localStorage.getItem(`admin_token_${shareToken}`)
+  );
   const [editingParticipant, setEditingParticipant] = useState<any>(null);
 
   useEffect(() => {
@@ -39,6 +41,24 @@ export default function Dashboard() {
     const interval = setInterval(fetchEvent, 10000);
     return () => clearInterval(interval);
   }, [shareToken]);
+
+  // Auto-fetch admin token for creator on any device
+  useEffect(() => {
+    if (!data || !participantToken || adminToken) return;
+    const currentUser = data.participants?.find((p: any) => p.participant_token === participantToken);
+    if (!currentUser?.is_creator) return;
+    fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}/admin-token`, {
+      headers: { 'x-participant-token': participantToken }
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.admin_token) {
+          localStorage.setItem(`admin_token_${shareToken}`, d.admin_token);
+          setAdminToken(d.admin_token);
+        }
+      })
+      .catch(() => {});
+  }, [data, participantToken, adminToken, shareToken]);
 
   const handleCopyNav = async () => {
     const url = `${window.location.host}/e/${shareToken}/join`;

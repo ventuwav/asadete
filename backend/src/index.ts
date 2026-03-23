@@ -209,6 +209,28 @@ app.get('/api/events/:share_token', async (req, res) => {
   }
 });
 
+// 4.4 Get admin token for creator (authenticated by participant_token)
+app.get('/api/events/:share_token/admin-token', async (req, res) => {
+  try {
+    const { share_token } = req.params;
+    const participant_token = req.headers['x-participant-token'] as string;
+    if (!participant_token) return res.status(401).json({ error: 'Missing participant token' });
+
+    const event = await prisma.event.findUnique({ where: { share_token } });
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    if (!event.admin_token) return res.status(404).json({ error: 'No admin token for this event' });
+
+    const participant = await prisma.participant.findFirst({
+      where: { participant_token, event_id: event.id, is_creator: true }
+    });
+    if (!participant) return res.status(403).json({ error: 'Not the creator' });
+
+    res.json({ admin_token: event.admin_token });
+  } catch (error) {
+    res.status(500).json({ error: String(error) });
+  }
+});
+
 // 4.5 Liquidar evento (Optimized Transfers)
 app.post('/api/events/:share_token/settle', async (req, res) => {
   try {
