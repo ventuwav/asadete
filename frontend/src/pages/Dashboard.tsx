@@ -123,7 +123,11 @@ export default function Dashboard() {
   };
 
   const markPaid = async (debtId: string) => await fetch(`${import.meta.env.VITE_API_URL || ''}/api/debts/${debtId}/pay`, { method: 'POST' });
-  const confirmPaid = async (debtId: string) => await fetch(`${import.meta.env.VITE_API_URL || ''}/api/debts/${debtId}/confirm`, { method: 'POST' });
+  const confirmPaid = async (debtId: string) => {
+    await fetch(`${import.meta.env.VITE_API_URL || ''}/api/debts/${debtId}/confirm`, { method: 'POST' });
+    const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`);
+    setData(await res.json());
+  };
   const closeEvent = async () => await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}/close`, { method: 'POST' });
 
   if (loading) return <div className="min-h-screen bg-[#fcf8f7] flex items-center justify-center font-heading text-lg text-primary">Cargando la parrilla...</div>;
@@ -485,8 +489,14 @@ export default function Dashboard() {
                         </div>
                         <span className={`font-heading font-bold text-xl ${isPaid ? 'text-[#1c7327]' : 'text-[#2b2725]'}`}>${debt.amount.toLocaleString()}</span>
                       </div>
-                      <button disabled={!isPaid} onClick={() => confirmPaid(debt.id)} className={`w-full py-4 text-white rounded-[0.8rem] text-sm font-bold flex justify-center items-center gap-2 transition-all ${!isPaid ? 'bg-[#d9d2ce] text-[#7a706b]' : 'bg-[#135c1d] hover:bg-black'}`}>
-                        <Receipt size={18} strokeWidth={3}/> {!isPaid ? 'Aún no transfirió' : 'Confirmar Recepción'}
+                      <button
+                        onClick={() => confirmPaid(debt.id)}
+                        className={`w-full py-4 text-white rounded-[0.8rem] text-sm font-bold flex justify-center items-center gap-2 transition-all ${
+                          isPaid ? 'bg-[#135c1d] hover:bg-black' : 'bg-[#b83a0a] hover:bg-[#8a2905]'
+                        }`}
+                      >
+                        <Receipt size={18} strokeWidth={3}/>
+                        {isPaid ? 'Confirmar Recepción ✓' : 'Recibí el pago'}
                       </button>
                     </div>
                   );
