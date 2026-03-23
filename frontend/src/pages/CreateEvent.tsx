@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Copy, Check, Users, Receipt, Link as LinkIcon, Wallet, Share2 } from 'lucide-react';
+import { Copy, Check, Receipt, Link as LinkIcon, Wallet, Share2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
 const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: any) => (
@@ -166,18 +166,6 @@ export default function CreateEvent() {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pb-6">
-                    <div className="bg-[#fcf8f7] rounded-[1.5rem] p-6 flex flex-col gap-2 shadow-sm border border-[#e8ded8]/50">
-                        <Users className="text-[#b83a0a]" size={22}/>
-                        <span className="text-3xl font-heading font-extrabold text-[#1f1a17]">0</span>
-                        <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">INVITADOS</span>
-                    </div>
-                    <div className="bg-[#fcf8f7] rounded-[1.5rem] p-6 flex flex-col gap-2 shadow-sm border border-[#e8ded8]/50">
-                        <Wallet className="text-[#1c7327]" size={22}/>
-                        <span className="text-3xl font-heading font-extrabold text-[#1f1a17]">$0</span>
-                        <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">GASTOS</span>
-                    </div>
-                </div>
 
                 <div className="pb-32">
                     <button

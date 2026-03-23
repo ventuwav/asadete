@@ -222,11 +222,23 @@ export default function Dashboard() {
 
         <div className="px-5 mt-2 relative z-10 w-full max-w-md mx-auto flex-1">
           
-          <div className="mb-8">
-            <div className="flex justify-between items-end mb-2">
+          <div className="mb-6">
+            <div className="flex justify-between items-end mb-4">
               <div>
                 <p className="text-[#7a706b] text-xs font-bold mb-1 uppercase tracking-wider">Total Asadete</p>
                 <h2 className="text-4xl font-heading font-extrabold tracking-tight text-[#b83a0a]">${total_pool.toLocaleString('es-AR')}</h2>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
+                <User className="text-[#b83a0a]" size={18}/>
+                <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">{data.participants.length}</span>
+                <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">Invitados</span>
+              </div>
+              <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
+                <Wallet className="text-[#1c7327]" size={18}/>
+                <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">${total_pool.toLocaleString('es-AR', {maximumFractionDigits:0})}</span>
+                <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">En gastos</span>
               </div>
             </div>
           </div>
