@@ -27,6 +27,7 @@ export default function Dashboard() {
     localStorage.getItem(`admin_token_${shareToken}`)
   );
   const [editingParticipant, setEditingParticipant] = useState<any>(null);
+  const [navView, setNavView] = useState<'GASTOS'|'DEUDAS'>('GASTOS');
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -41,6 +42,12 @@ export default function Dashboard() {
     const interval = setInterval(fetchEvent, 10000);
     return () => clearInterval(interval);
   }, [shareToken]);
+
+  // Auto-switch nav to DEUDAS when event is settled
+  useEffect(() => {
+    if (data?.status === 'settled') setNavView('DEUDAS');
+    if (data?.status === 'open') setNavView('GASTOS');
+  }, [data?.status]);
 
   // Auto-fetch admin token for creator on any device
   useEffect(() => {
@@ -138,20 +145,24 @@ export default function Dashboard() {
 
   const currentUser = data.participants.find((p:any) => p.participant_token === participantToken);
 
-  const renderNav = (activeTab: 'ASADO'|'GASTOS'|'DEUDAS'|'COMPARTIR') => (
+  const renderNav = (
+    activeTab: 'ASADO'|'GASTOS'|'DEUDAS'|'COMPARTIR',
+    onGastos?: () => void,
+    onDeudas?: () => void
+  ) => (
     <nav className="fixed bottom-0 left-0 right-0 bg-[#efece9] p-2 px-4 shadow-[0_-10px_40px_rgba(45,51,53,0.03)] flex justify-between items-center z-50 rounded-t-[2rem]">
       
-      <div className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='ASADO' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
+      <div onClick={onGastos} className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='ASADO' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
         <Grill size={22} strokeWidth={activeTab==='ASADO'?2.5:2} className={activeTab==='ASADO'?'':'text-[#5a504b]'}/>
         <span className="text-[9px] font-bold tracking-wider uppercase">Asado</span>
       </div>
       
-      <div className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='GASTOS' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
+      <div onClick={onGastos} className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='GASTOS' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
         <Wallet size={22} strokeWidth={activeTab==='GASTOS'?2.5:2} className={activeTab==='GASTOS'?'':'text-[#5a504b]'}/>
         <span className="text-[9px] font-bold tracking-wider uppercase">Gastos</span>
       </div>
 
-      <div className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='DEUDAS' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
+      <div onClick={onDeudas} className={`flex flex-col items-center gap-1 w-20 py-2 rounded-2xl ${activeTab==='DEUDAS' ? 'bg-[#b83a0a] text-white shadow-md' : 'text-[#7a706b] hover:bg-[#e8ded8] transition-colors'} cursor-pointer`}>
         <Receipt size={22} strokeWidth={activeTab==='DEUDAS'?2.5:2} className={activeTab==='DEUDAS'?'':'text-[#5a504b]'}/>
         <span className="text-[9px] font-bold tracking-wider uppercase">Deudas</span>
       </div>
@@ -399,7 +410,11 @@ export default function Dashboard() {
             </div>
           )}
         </div>
-        {renderNav('GASTOS')}
+        {renderNav(
+          navView === 'DEUDAS' ? 'DEUDAS' : 'GASTOS',
+          () => { setNavView('GASTOS'); window.scrollTo({top:0, behavior:'smooth'}); },
+          () => { setNavView('DEUDAS'); window.scrollTo({top:0, behavior:'smooth'}); }
+        )}
       </div>
     );
   }
@@ -575,7 +590,11 @@ export default function Dashboard() {
             </div>
           )}
         </div>
-        {renderNav('DEUDAS')}
+        {renderNav(
+          navView === 'GASTOS' ? 'GASTOS' : 'DEUDAS',
+          () => { setNavView('GASTOS'); window.scrollTo({top:0, behavior:'smooth'}); },
+          () => { setNavView('DEUDAS'); window.scrollTo({top:0, behavior:'smooth'}); }
+        )}
       </div>
     );
   }
