@@ -29,14 +29,22 @@ export default function Dashboard() {
   const [editingParticipant, setEditingParticipant] = useState<any>(null);
   const [navView, setNavView] = useState<'GASTOS'|'DEUDAS'>('GASTOS');
 
+  const [debugLog, setDebugLog] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
+        setDebugLog(prev => [...prev, `[${new Date().toLocaleTimeString()}] Fetching...`]);
         const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const ev = await res.json();
         setData(ev);
-      } catch (err) { }
-      setLoading(false);
+        setDebugLog(prev => [...prev, `[${new Date().toLocaleTimeString()}] Data loaded.`]);
+      } catch (err: any) { 
+        setDebugLog(prev => [...prev, `[${new Date().toLocaleTimeString()}] Error: ${err.message || String(err)}`]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchEvent();
     const interval = setInterval(fetchEvent, 10000);
@@ -137,7 +145,16 @@ export default function Dashboard() {
   };
   const closeEvent = async () => await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}/close`, { method: 'POST' });
 
-  if (loading) return <div className="min-h-screen bg-[#fcf8f7] flex items-center justify-center font-heading text-lg text-primary">Cargando la parrilla...</div>;
+  if (loading) return (
+    <div className="min-h-screen bg-[#fcf8f7] flex flex-col items-center justify-center font-heading text-lg text-primary p-6">
+      <div>Cargando la parrilla...</div>
+      {debugLog.length > 0 && (
+        <div className="mt-4 p-4 bg-white rounded-xl text-[10px] font-mono max-w-xs text-[#7a706b] border border-[#e8ded8] overflow-auto max-h-32 w-full space-y-0.5 shadow-sm">
+          {debugLog.map((log, i) => <div key={i} className="truncate">{log}</div>)}
+        </div>
+      )}
+    </div>
+  );
   if (!data || data.error) return <div className="min-h-screen bg-[#fcf8f7] flex items-center justify-center font-heading text-lg text-primary">Asado no encontrado.</div>;
 
   const total_pool = data.expenses.reduce((sum: number, e: any) => sum + e.total_amount, 0);
@@ -453,6 +470,16 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-8">
+            {!currentUser && (
+              <div className="bg-[#fff9e6] border border-[#ffeb99] rounded-2xl p-4 flex gap-3 items-start shadow-sm">
+                <span className="text-xl">⚠️</span>
+                <div>
+                  <p className="font-bold text-xs text-[#856404]">No vinculo tu usuario</p>
+                  <p className="text-[10px] text-[#856404]/80 mt-0.5">Entraste como visitante. Si cargaste gastos, pedile al DT que te verifique o volvé a entrar desde el link que te pasaron.</p>
+                </div>
+              </div>
+            )}
+
             {/* DT-ONLY: Global transfer overview */}
             {adminToken && currentUser?.is_creator && data.debts.length > 0 && (
               <div className="bg-[#1f1a17] rounded-[1.5rem] p-5 space-y-4">
