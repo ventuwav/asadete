@@ -425,6 +425,47 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-8">
+            {/* DT-ONLY: Global transfer overview */}
+            {adminToken && currentUser?.is_creator && data.debts.length > 0 && (
+              <div className="bg-[#1f1a17] rounded-[1.5rem] p-5 space-y-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] px-2 py-1 rounded-md">DT</span>
+                  <span className="text-white/80 text-[12px] font-bold">Resumen de Transferencias</span>
+                </div>
+                <div className="space-y-2">
+                  {data.debts.map((debt: any) => {
+                    const isConfirmed = debt.status === 'confirmed';
+                    const isPaid = debt.status === 'paid';
+                    const creditor = data.participants.find((p: any) => p.id === debt.to_participant_id);
+                    return (
+                      <div key={debt.id} className={`flex items-center justify-between rounded-xl p-3 gap-3 ${isConfirmed ? 'bg-white/5 opacity-50' : 'bg-white/10'}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-white font-bold text-[12px] truncate">{debt.from_participant.name}</span>
+                            <span className="text-white/40 text-[10px]">→</span>
+                            <span className="text-white font-bold text-[12px] truncate">{debt.to_participant.name}</span>
+                          </div>
+                          {creditor?.alias && (
+                            <p className="text-white/50 text-[10px] font-medium mt-0.5 truncate">{creditor.alias}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-white font-heading font-extrabold text-[14px]">${debt.amount.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
+                          <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                            isConfirmed ? 'bg-[#1c7327]/60 text-green-300' :
+                            isPaid     ? 'bg-yellow-600/40 text-yellow-200' :
+                                          'bg-white/10 text-white/50'
+                          }`}>
+                            {isConfirmed ? '✓ ok' : isPaid ? 'en camino' : 'pendiente'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* PENDIENTES GROUP */}
             {relevantDebts.some((d:any)=>currentUser?.id === d.from_participant_id && d.status !== 'confirmed') && (
               <div className="space-y-4">
