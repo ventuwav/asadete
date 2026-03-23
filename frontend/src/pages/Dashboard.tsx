@@ -61,7 +61,7 @@ export default function Dashboard() {
   }, [data, participantToken, adminToken, shareToken]);
 
   const handleCopyNav = async () => {
-    const url = `${window.location.host}/e/${shareToken}/join`;
+    const url = `${window.location.origin}/e/${shareToken}/join`;
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(url).catch(()=>{});
     } else {

@@ -38,7 +38,7 @@ export default function CreateEvent() {
 
   const handleCopy = async () => {
     if (!createdEvent) return;
-    const url = `${window.location.host}/e/${createdEvent.share_token}/join`;
+    const url = `${window.location.origin}/e/${createdEvent.share_token}/join`;
     await safeCopy(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -46,7 +46,7 @@ export default function CreateEvent() {
 
   const handleCopyNav = async () => {
     if (!createdEvent) return;
-    const url = `${window.location.host}/e/${createdEvent.share_token}/join`;
+    const url = `${window.location.origin}/e/${createdEvent.share_token}/join`;
     await safeCopy(url);
     setCopiedNav(true);
     setTimeout(() => setCopiedNav(false), 2000);
@@ -158,7 +158,7 @@ export default function CreateEvent() {
                 <div className="bg-[#e8ded8]/50 rounded-[1.5rem] p-6 space-y-4">
                     <label className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a]">ENLACE DEL EVENTO</label>
                     <div className="w-full bg-[#fcf8f7] rounded-[1rem] p-4 flex justify-between items-center text-xs font-medium text-[#7a706b] shadow-sm">
-                        <span className="truncate pr-4">{window.location.host}/e/{createdEvent.share_token}</span>
+                        <span className="truncate pr-4">{window.location.origin}/e/{createdEvent.share_token}</span>
                         <LinkIcon size={16} className="text-[#b83a0a] flex-shrink-0" />
                     </div>
                     <button onClick={handleCopy} className="w-full py-4 bg-[#1f1a17] text-white rounded-[1rem] text-sm font-heading font-bold flex items-center justify-center gap-2 hover:bg-black transition-colors">
