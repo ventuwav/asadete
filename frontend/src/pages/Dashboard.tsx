@@ -471,11 +471,25 @@ export default function Dashboard() {
 
           <div className="space-y-8">
             {!currentUser && (
-              <div className="bg-[#fff9e6] border border-[#ffeb99] rounded-2xl p-4 flex gap-3 items-start shadow-sm">
+              <div className="bg-[#fff9e6] border border-[#ffeb99] rounded-2xl p-4 flex gap-3 items-start shadow-sm mb-6">
                 <span className="text-xl">⚠️</span>
-                <div>
-                  <p className="font-bold text-xs text-[#856404]">No vinculo tu usuario</p>
-                  <p className="text-[10px] text-[#856404]/80 mt-0.5">Entraste como visitante. Si cargaste gastos, pedile al DT que te verifique o volvé a entrar desde el link que te pasaron.</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-xs text-[#856404]">No vinculó tu usuario</p>
+                  <p className="text-[10px] text-[#856404]/80 mt-0.5">Entraste como visitante. ¿Sos alguno de estos invitados? Tocá tu nombre para ver tus deudas:</p>
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
+                    {data.participants.map((p: any) => (
+                      <button 
+                        key={p.id} 
+                        onClick={() => {
+                          localStorage.setItem(`asadete_${shareToken}`, p.participant_token);
+                          window.location.reload();
+                        }}
+                        className="bg-white hover:bg-[#fffdf5] text-[10px] font-bold text-[#856404] px-2.5 py-1.5 rounded-lg border border-[#ffeb99] shadow-sm transition-colors active:scale-95"
+                      >
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
