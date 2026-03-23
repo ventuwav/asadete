@@ -437,6 +437,18 @@ export default function Dashboard() {
             <h2 className="text-[44px] font-heading font-bold tracking-tighter flex items-center gap-3">
                 <span className="text-2xl mt-1">$</span>{total_pool.toLocaleString(undefined, {minimumFractionDigits:0})} <span className="text-[11px] font-bold text-[#5a504b] uppercase tracking-widest mt-2">balance total</span>
             </h2>
+            <div className="grid grid-cols-2 gap-3 mt-5">
+              <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
+                <User className="text-[#b83a0a]" size={18}/>
+                <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">{data.participants.length}</span>
+                <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">Invitados</span>
+              </div>
+              <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
+                <Wallet className="text-[#1c7327]" size={18}/>
+                <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">${total_pool.toLocaleString('es-AR', {maximumFractionDigits:0})}</span>
+                <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">En gastos</span>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-8">
