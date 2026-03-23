@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Event {
@@ -13,7 +14,7 @@ model Event {
   budget       Float         @default(0)
   status       String        @default("open")
   share_token  String        @unique @default(uuid())
-  admin_token  String?
+  admin_token  String?       @unique
   created_at   DateTime      @default(now())
   
   participants Participant[]

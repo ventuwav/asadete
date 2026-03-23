@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { User, Receipt, Plus, Check, X, ArrowLeft, Heart, ShoppingBag, Share2, PanelTopClose, Wallet, History } from 'lucide-react';
+import { User, Receipt, Plus, Check, X, ArrowLeft, Heart, ShoppingBag, Share2, PanelTopClose, Wallet, History, Pencil } from 'lucide-react';
+import EditParticipantModal from './EditParticipantModal';
 
 const Grill = ({ size = 24, className = "", strokeWidth = 2, fill = "none" }: any) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -22,6 +23,8 @@ export default function Dashboard() {
   const [openTab, setOpenTab] = useState<'consumos' | 'resumen'>('consumos');
   
   const participantToken = localStorage.getItem(`asadete_${shareToken}`);
+  const adminToken = localStorage.getItem(`admin_token_${shareToken}`);
+  const [editingParticipant, setEditingParticipant] = useState<any>(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -169,7 +172,20 @@ export default function Dashboard() {
 
     return (
       <div className="min-h-screen bg-[#fcf8f7] flex flex-col font-body text-[#1f1a17] pb-32">
-        {/* Assuming Navbar and Hero components are defined elsewhere or will be added */}
+        {editingParticipant && adminToken && (
+          <EditParticipantModal
+            shareToken={shareToken!}
+            adminToken={adminToken}
+            participant={editingParticipant}
+            initialExpenses={data.expenses.filter((e: any) => e.participant_id === editingParticipant.id)}
+            onClose={() => setEditingParticipant(null)}
+            onSaved={async () => {
+              setEditingParticipant(null);
+              const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}`);
+              setData(await res.json());
+            }}
+          />
+        )}
         {/* <Navbar title="Tu Asado Activo" /> */}
         {/* <Hero state="open" /> */}
         {renderHeader()} {/* Keeping renderHeader for now as Navbar/Hero are not provided */}
@@ -265,9 +281,19 @@ export default function Dashboard() {
                              </p>
                            </div>
                         </div>
-                        <div className="text-right">
-                           <p className="text-[10px] font-bold text-[#7a706b] uppercase tracking-widest mb-0.5">Cuota DT</p>
-                           <p className="font-heading font-bold text-xl">${participantOwesTotal.toLocaleString('es-AR', {minimumFractionDigits:0, maximumFractionDigits:2})}</p>
+                        <div className="flex items-center gap-2">
+                           {adminToken && currentUser?.is_creator && (
+                             <button
+                               onClick={() => setEditingParticipant(p)}
+                               className="w-9 h-9 rounded-full bg-[#b83a0a]/10 flex items-center justify-center text-[#b83a0a] hover:bg-[#b83a0a]/20 transition-colors"
+                             >
+                               <Pencil size={15} strokeWidth={2.5} />
+                             </button>
+                           )}
+                           <div className="text-right">
+                              <p className="text-[10px] font-bold text-[#7a706b] uppercase tracking-widest mb-0.5">Cuota DT</p>
+                              <p className="font-heading font-bold text-xl">${participantOwesTotal.toLocaleString('es-AR', {minimumFractionDigits:0, maximumFractionDigits:2})}</p>
+                           </div>
                         </div>
                     </div>
 
