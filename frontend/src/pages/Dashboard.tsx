@@ -250,25 +250,10 @@ export default function Dashboard() {
             </div>
             <div className="text-right">
               <p className="text-[#7a706b] text-[10px] font-bold mb-1 uppercase tracking-wider">Estado</p>
-              <div className="bg-[#b83a0a]/10 text-[#b83a0a] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">Asignando Gastos</div>
+              <div className="bg-[#e8ede9] text-[#5a706b] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">Asignando Gastos</div>
             </div>
           </div>
 
-          {/* DT Admin strip — always visible for creators */}
-          {adminToken && currentUser?.is_creator && (
-            <div className="flex items-center justify-between bg-[#1f1a17] rounded-[1.25rem] px-5 py-3.5 mb-5">
-              <div className="flex items-center gap-2">
-                <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] px-2 py-1 rounded-md">DT</span>
-                <span className="text-white/80 text-[11px] font-bold">Modo Director Técnico</span>
-              </div>
-              <button
-                onClick={() => setOpenTab('resumen')}
-                className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase text-white bg-white/15 px-3 py-1.5 rounded-[0.5rem] hover:bg-white/25 transition-colors"
-              >
-                <Pencil size={12} /> Editar gastos
-              </button>
-            </div>
-          )}
 
           <div className="flex bg-[#e8ded8] p-1 rounded-[1rem] mb-8 relative">
              <button onClick={() => setOpenTab('consumos')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] z-10 transition-colors ${openTab === 'consumos' ? 'text-[#2b2725] bg-white shadow-sm' : 'text-[#7a706b] hover:text-[#2b2725]'}`}>Tu Consumo</button>
@@ -393,6 +378,21 @@ export default function Dashboard() {
             )}
 
           </div>
+          )}
+          {/* DT Admin strip — bottom, above nav */}
+          {adminToken && currentUser?.is_creator && (
+            <div className="flex items-center justify-between bg-[#1f1a17] rounded-[1.25rem] px-5 py-3.5 mt-6 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] px-2 py-1 rounded-md">DT</span>
+                <span className="text-white/80 text-[11px] font-bold">Modo Director Técnico</span>
+              </div>
+              <button
+                onClick={() => setOpenTab('resumen')}
+                className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase text-white bg-white/15 px-3 py-1.5 rounded-[0.5rem] hover:bg-white/25 transition-colors"
+              >
+                <Pencil size={12} /> Editar gastos
+              </button>
+            </div>
           )}
         </div>
         {renderNav('GASTOS')}
