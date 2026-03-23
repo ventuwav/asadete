@@ -188,10 +188,11 @@ export default function Dashboard() {
      {/* DT badge or default avatar */}
       {currentUser?.is_creator && adminToken ? (
         <div className="flex items-center gap-2">
-          <div className="relative flex flex-col items-center justify-center w-12 h-12 bg-[#b83a0a] rounded-b-full rounded-t-[30%] shadow-md">
-            <span className="text-white text-[8px] font-black tracking-[0.2em] uppercase leading-none mt-1">DT</span>
-            <div className="absolute -bottom-1 w-4 h-1 bg-[#b83a0a] rounded-b-sm" />
-          </div>
+          <img 
+            src="/dt-shield.jpg" 
+            alt="DT" 
+            className="w-12 h-12 rounded-full object-cover border-2 border-[#b83a0a] shadow-sm"
+          />
         </div>
       ) : (
         <div className="w-10 h-10 rounded-full bg-[#e8ded8] flex items-center justify-center">
