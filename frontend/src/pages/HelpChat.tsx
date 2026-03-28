@@ -31,11 +31,16 @@ export default function HelpChat() {
   const sendMutation = useMutation({
     mutationFn: ({ message, history }: { message: string; history: Message[] }) =>
       api.chat.send(message, history),
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       setMessages(prev => [
         ...prev,
-        { role: 'user', text: variables.message },
         { role: 'model', text: data.response },
+      ]);
+    },
+    onError: () => {
+      setMessages(prev => [
+        ...prev,
+        { role: 'model', text: 'Uy, algo salió mal. Intentá de nuevo en un momento.' },
       ]);
     },
   });
@@ -44,6 +49,7 @@ export default function HelpChat() {
     const trimmed = text.trim();
     if (!trimmed || sendMutation.isPending) return;
     setInput('');
+    setMessages(prev => [...prev, { role: 'user', text: trimmed }]);
     sendMutation.mutate({ message: trimmed, history: messages });
   }
 
