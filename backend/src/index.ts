@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/ping', (_req, res) => res.json({ ok: true }));
 app.use('/api/events', eventsRouter);
 app.use('/api/debts', debtsRouter);
 app.use('/api/items', itemsRouter);
