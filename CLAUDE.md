@@ -373,13 +373,13 @@ Supabase → PostgreSQL (hosted, us-west-2)
 **Proyecto:** `nmjwoketxjdsbyndqcdl` (us-west-2)
 **Dashboard:** https://supabase.com/dashboard/project/nmjwoketxjdsbyndqcdl
 
-#### Variables de conexión (ya en `backend/.env`)
+#### Variables de conexión (ya en `backend/.env` y configuradas en Render)
 ```ini
 # Pooled (app runtime — usa PgBouncer puerto 6543)
-DATABASE_URL="postgresql://postgres.nmjwoketxjdsbyndqcdl:<PASSWORD>@aws-0-us-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DATABASE_URL=postgresql://postgres.nmjwoketxjdsbyndqcdl:bujsun-mansyx-Nygwa6@aws-0-us-west-2.pooler.supabase.com:6543/postgres?pgbouncer=true
 
 # Direct (migraciones Prisma — puerto 5432)
-DIRECT_URL="postgresql://postgres.nmjwoketxjdsbyndqcdl:<PASSWORD>@aws-0-us-west-2.pooler.supabase.com:5432/postgres"
+DIRECT_URL=postgresql://postgres.nmjwoketxjdsbyndqcdl:bujsun-mansyx-Nygwa6@aws-0-us-west-2.pooler.supabase.com:5432/postgres
 ```
 
 #### Comandos Prisma contra Supabase
