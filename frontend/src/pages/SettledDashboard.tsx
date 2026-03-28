@@ -101,60 +101,6 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
             </div>
           )}
 
-          {adminToken && currentUser?.is_creator && data.debts.length > 0 && (
-            <div>
-              <button
-                onClick={() => setShowDTPanel(v => !v)}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-[1rem] border border-[#e8ded8] bg-white text-[#1f1a17] transition-colors hover:bg-[#f7f2ef]"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] text-white px-2 py-1 rounded-md">DT</span>
-                  <span className="text-[12px] font-bold">Panel de transferencias</span>
-                </div>
-                {showDTPanel ? <ChevronUp size={16} className="text-[#7a706b]" /> : <ChevronDown size={16} className="text-[#7a706b]" />}
-              </button>
-
-              {showDTPanel && (
-                <div className="bg-[#1f1a17] rounded-[1.5rem] p-5 space-y-4 mt-2">
-                  <div className="space-y-2">
-                    {data.debts.map((debt: any) => {
-                      const isConfirmed = debt.status === 'confirmed';
-                      const isPaid = debt.status === 'paid';
-                      const creditor = data.participants.find((p: any) => p.id === debt.to_participant_id);
-                      return (
-                        <div key={debt.id} className={`flex items-center justify-between rounded-xl p-3 gap-3 ${isConfirmed ? 'bg-white/5 opacity-50' : 'bg-white/10'}`}>
-                          <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                            <button
-                              onClick={() => !isConfirmed && confirmMutation.mutate(debt.id)}
-                              disabled={isConfirmed}
-                              className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all flex-shrink-0 ${isConfirmed ? 'bg-[#1c7327] border-[#1c7327] text-white' : 'border-white/20 hover:border-[#b83a0a] bg-white/5 hover:bg-[#b83a0a]/10 text-white/30 hover:text-white'}`}
-                            >
-                              {isConfirmed && <Check size={12} strokeWidth={4} />}
-                            </button>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="text-white font-bold text-[12px] truncate">{debt.from_participant.name}</span>
-                                <span className="text-white/40 text-[10px]">→</span>
-                                <span className="text-white font-bold text-[12px] truncate">{debt.to_participant.name}</span>
-                              </div>
-                              {creditor?.alias && <p className="text-white/50 text-[10px] font-medium mt-0.5 truncate">{creditor.alias}</p>}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-white font-heading font-extrabold text-[14px]">${debt.amount.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
-                            <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${isConfirmed ? 'bg-[#1c7327]/60 text-green-300' : isPaid ? 'bg-yellow-600/40 text-yellow-200' : 'bg-white/10 text-white/50'}`}>
-                              {isConfirmed ? '✓ ok' : isPaid ? 'en camino' : 'pendiente'}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
           {relevantDebts.some((d: any) => currentUser?.id === d.from_participant_id && d.status !== 'confirmed') && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -223,6 +169,59 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
                   );
                 })}
               </div>
+            </div>
+          )}
+          {adminToken && currentUser?.is_creator && data.debts.length > 0 && (
+            <div>
+              <button
+                onClick={() => setShowDTPanel(v => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-[1rem] border border-[#e8ded8] bg-white text-[#1f1a17] transition-colors hover:bg-[#f7f2ef]"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] text-white px-2 py-1 rounded-md">DT</span>
+                  <span className="text-[12px] font-bold">Panel de transferencias</span>
+                </div>
+                {showDTPanel ? <ChevronUp size={16} className="text-[#7a706b]" /> : <ChevronDown size={16} className="text-[#7a706b]" />}
+              </button>
+
+              {showDTPanel && (
+                <div className="bg-[#1f1a17] rounded-[1.5rem] p-5 space-y-4 mt-2">
+                  <div className="space-y-2">
+                    {data.debts.map((debt: any) => {
+                      const isConfirmed = debt.status === 'confirmed';
+                      const isPaid = debt.status === 'paid';
+                      const creditor = data.participants.find((p: any) => p.id === debt.to_participant_id);
+                      return (
+                        <div key={debt.id} className={`flex items-center justify-between rounded-xl p-3 gap-3 ${isConfirmed ? 'bg-white/5 opacity-50' : 'bg-white/10'}`}>
+                          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                            <button
+                              onClick={() => !isConfirmed && confirmMutation.mutate(debt.id)}
+                              disabled={isConfirmed}
+                              className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all flex-shrink-0 ${isConfirmed ? 'bg-[#1c7327] border-[#1c7327] text-white' : 'border-white/20 hover:border-[#b83a0a] bg-white/5 hover:bg-[#b83a0a]/10 text-white/30 hover:text-white'}`}
+                            >
+                              {isConfirmed && <Check size={12} strokeWidth={4} />}
+                            </button>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-white font-bold text-[12px] truncate">{debt.from_participant.name}</span>
+                                <span className="text-white/40 text-[10px]">→</span>
+                                <span className="text-white font-bold text-[12px] truncate">{debt.to_participant.name}</span>
+                              </div>
+                              {creditor?.alias && <p className="text-white/50 text-[10px] font-medium mt-0.5 truncate">{creditor.alias}</p>}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-white font-heading font-extrabold text-[14px]">${debt.amount.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
+                            <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${isConfirmed ? 'bg-[#1c7327]/60 text-green-300' : isPaid ? 'bg-yellow-600/40 text-yellow-200' : 'bg-white/10 text-white/50'}`}>
+                              {isConfirmed ? '✓ ok' : isPaid ? 'en camino' : 'pendiente'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
