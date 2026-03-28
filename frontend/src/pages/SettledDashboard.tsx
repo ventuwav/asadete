@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { User, Receipt, Check, Wallet, History, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import Grill from '../components/Grill';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function SettledDashboard({ shareToken, data, currentUser, adminToken, onRefresh }: Props) {
+  const navigate = useNavigate();
   const { copied, copy } = useCopyLink();
   const [showDTPanel, setShowDTPanel] = useState(false);
 
@@ -254,6 +256,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
         onGastos={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onDeudas={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onCompartir={() => copy(`${window.location.origin}/e/${shareToken}/join`)}
+        onAyuda={() => navigate(`/e/${shareToken}/ayuda`)}
         copiedLink={copied}
       />
     </div>

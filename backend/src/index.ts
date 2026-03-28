@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import eventsRouter from './routes/events';
 import debtsRouter from './routes/debts';
 import itemsRouter from './routes/items';
+import chatRouter from './routes/chat';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/events', eventsRouter);
 app.use('/api/debts', debtsRouter);
 app.use('/api/items', itemsRouter);
+app.use('/api/chat', chatRouter);
 
 app.use(errorHandler);
 

@@ -3,6 +3,7 @@ import CreateEvent from './pages/CreateEvent';
 import JoinEvent from './pages/JoinEvent';
 import Dashboard from './pages/Dashboard';
 import ShareEvent from './pages/ShareEvent';
+import HelpChat from './pages/HelpChat';
 import ErrorBoundary from './components/ErrorBoundary';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<CreateEvent />} />
         <Route path="/e/:shareToken/share" element={<ShareEvent />} />
         <Route path="/e/:shareToken/join" element={<JoinEvent />} />
+        <Route path="/e/:shareToken/ayuda" element={<HelpChat />} />
         <Route path="/e/:shareToken" element={<Dashboard />} />
       </Routes>
     </ErrorBoundary>

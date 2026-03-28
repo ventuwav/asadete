@@ -83,5 +83,13 @@ export const api = {
         `/api/items/${itemId}/toggle`,
         json({ method: 'POST' }, { participant_id: participantId })
       )
+  },
+
+  chat: {
+    send: (message: string, history: { role: 'user' | 'model'; text: string }[]) =>
+      request<{ response: string }>(
+        '/api/chat',
+        json({ method: 'POST' }, { message, history })
+      )
   }
 };

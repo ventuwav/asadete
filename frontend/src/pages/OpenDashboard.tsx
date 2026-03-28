@@ -271,6 +271,7 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
         onGastos={() => { setNavView('GASTOS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         onDeudas={() => { setNavView('DEUDAS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         onCompartir={() => copy(`${window.location.origin}/e/${shareToken}/join`)}
+        onAyuda={() => navigate(`/e/${shareToken}/ayuda`)}
         copiedLink={copied}
       />
     </div>
