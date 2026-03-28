@@ -13,6 +13,7 @@ export default function App() {
         <Route path="/" element={<CreateEvent />} />
         <Route path="/e/:shareToken/share" element={<ShareEvent />} />
         <Route path="/e/:shareToken/join" element={<JoinEvent />} />
+        <Route path="/ayuda" element={<HelpChat />} />
         <Route path="/e/:shareToken/ayuda" element={<HelpChat />} />
         <Route path="/e/:shareToken" element={<Dashboard />} />
       </Routes>

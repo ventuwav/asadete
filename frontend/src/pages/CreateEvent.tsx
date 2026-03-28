@@ -105,6 +105,7 @@ export default function CreateEvent() {
         onGastos={() => createdEvent && navigate(`/e/${createdEvent.share_token}`)}
         onDeudas={() => createdEvent && navigate(`/e/${createdEvent.share_token}`)}
         onCompartir={() => copyNav(getJoinUrl())}
+        onAyuda={() => navigate('/ayuda')}
         copiedLink={copiedNav}
       />
     </div>

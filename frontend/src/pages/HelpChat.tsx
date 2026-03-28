@@ -18,7 +18,7 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function HelpChat() {
-  const { shareToken } = useParams<{ shareToken: string }>();
+  const { shareToken } = useParams<{ shareToken?: string }>();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -51,7 +51,7 @@ export default function HelpChat() {
     <div className="min-h-screen bg-[#fcf8f7] flex flex-col font-body text-[#1f1a17]">
       <header className="flex items-center gap-3 px-6 pt-[max(1.5rem,env(safe-area-inset-top,1.5rem))] pb-4 border-b border-[#e8ded8]">
         <button
-          onClick={() => navigate(`/e/${shareToken}`)}
+          onClick={() => shareToken ? navigate(`/e/${shareToken}`) : navigate('/')}
           className="w-9 h-9 rounded-full bg-[#f2ece9] flex items-center justify-center"
         >
           <ArrowLeft size={18} />
