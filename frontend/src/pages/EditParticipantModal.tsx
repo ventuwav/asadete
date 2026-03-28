@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, User, Plus, ShoppingCart, CircleOff } from 'lucide-react';
+import { api } from '../lib/api';
 
 interface Item { name: string; amount: string; }
 
@@ -40,11 +41,7 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
           }]
         : [];
 
-      await fetch(`${import.meta.env.VITE_API_URL || ''}/api/events/${shareToken}/participants/${participant.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ admin_token: adminToken, alias, expenses })
-      });
+      await api.events.editParticipant(shareToken, participant.id, { admin_token: adminToken, alias, expenses });
       onSaved();
     } catch {
       alert('Error al guardar cambios');
