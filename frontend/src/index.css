@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
   body {
     @apply bg-surface text-onSurface;
+    overflow-x: hidden;
+    width: 100%;
   }
 }

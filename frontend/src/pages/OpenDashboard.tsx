@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Check, X, ShoppingBag, Wallet, PanelTopClose, Pencil } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Grill from '../components/Grill';
 import BottomNav from '../components/BottomNav';
+import PageLayout from '../components/PageLayout';
+import AppHeader from '../components/AppHeader';
+import Card from '../components/Card';
+import SectionLabel from '../components/SectionLabel';
+import { Button } from '../components/ui/button';
 import EditParticipantModal from './EditParticipantModal';
 import { api } from '../lib/api';
 import { useCopyLink } from '../hooks/useCopyLink';
@@ -22,7 +26,6 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
   const queryClient = useQueryClient();
   const { copied, copy } = useCopyLink();
   const [openTab, setOpenTab] = useState<'consumos' | 'resumen'>('consumos');
-  const [navView, setNavView] = useState<'GASTOS' | 'DEUDAS'>('GASTOS');
   const [editingParticipant, setEditingParticipant] = useState<any>(null);
 
   const allItems = data.expenses.flatMap((e: any) => e.items);
@@ -38,10 +41,8 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
   const toggleMutation = useMutation({
     mutationFn: (itemId: string) => api.items.toggle(itemId, currentUser.id),
     onMutate: async (itemId: string) => {
-      // Cancel in-flight refetches so they don't overwrite the optimistic update
       await queryClient.cancelQueries({ queryKey: eventQueryKey(shareToken) });
       const previous = queryClient.getQueryData(eventQueryKey(shareToken));
-      // Optimistic update
       queryClient.setQueryData(eventQueryKey(shareToken), (old: any) => ({
         ...old,
         expenses: old.expenses.map((e: any) => ({
@@ -61,11 +62,9 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
       return { previous };
     },
     onError: (_err, _itemId, context: any) => {
-      // Roll back on error
       queryClient.setQueryData(eventQueryKey(shareToken), context.previous);
     },
     onSettled: () => {
-      // Always reconcile with server truth after toggle
       onRefresh();
     },
   });
@@ -75,8 +74,12 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
     onSuccess: onRefresh,
   });
 
+  const userAvatar = currentUser?.is_creator && adminToken
+    ? <img src="/dt-shield.jpg" alt="DT" className="w-12 h-12 rounded-full object-cover border-2 border-primary shadow-sm" />
+    : <div className="w-10 h-10 rounded-full bg-surfaceHighest flex items-center justify-center"><User size={18} fill="currentColor" className="text-onSurfaceVariant" /></div>;
+
   return (
-    <div className="min-h-screen bg-[#fcf8f7] flex flex-col font-body text-[#1f1a17] pb-32">
+    <PageLayout>
       {editingParticipant && adminToken && (
         <EditParticipantModal
           shareToken={shareToken}
@@ -88,56 +91,46 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
         />
       )}
 
-      <header className="flex items-center justify-between px-6 pt-[max(1.5rem,env(safe-area-inset-top,1.5rem))] pb-2">
-        <div className="flex items-center gap-2">
-          <Grill className="text-[#b83a0a]" fill="#b83a0a" size={24} />
-          <span className="font-heading font-bold text-lg tracking-tight text-[#b83a0a] italic">Asadete</span>
-        </div>
-        {currentUser?.is_creator && adminToken ? (
-          <img src="/dt-shield.jpg" alt="DT" className="w-12 h-12 rounded-full object-cover border-2 border-[#b83a0a] shadow-sm" />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-[#e8ded8] flex items-center justify-center">
-            <User size={18} fill="currentColor" className="text-[#7a706b]" />
-          </div>
-        )}
-      </header>
+      <AppHeader variant="compact" right={userAvatar} />
 
       <div className="px-5 mt-2 relative z-10 w-full max-w-md mx-auto flex-1">
+        {/* Stats */}
         <div className="mb-6">
           <div className="flex justify-between items-end mb-4">
             <div>
-              <p className="text-[#7a706b] text-xs font-bold mb-1 uppercase tracking-wider">Total Asadete</p>
-              <h2 className="text-4xl font-heading font-extrabold tracking-tight text-[#b83a0a]">${total_pool.toLocaleString('es-AR')}</h2>
+              <p className="text-onSurfaceVariant text-xs font-bold mb-1 uppercase tracking-wider">Total Asadete</p>
+              <h2 className="text-4xl font-heading font-extrabold tracking-tight text-primary">${total_pool.toLocaleString('es-AR')}</h2>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
-              <User className="text-[#b83a0a]" size={18} />
-              <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">{data.participants.length}</span>
-              <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">Invitados</span>
-            </div>
-            <div className="bg-white rounded-[1.25rem] p-4 flex flex-col gap-1.5 shadow-sm border border-[#e8ded8]/50">
-              <Wallet className="text-[#1c7327]" size={18} />
-              <span className="text-2xl font-heading font-extrabold text-[#1f1a17]">${total_pool.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
-              <span className="text-[9px] font-bold tracking-widest uppercase text-[#7a706b]">En gastos</span>
-            </div>
+            <Card className="p-4 flex flex-col gap-1.5">
+              <User className="text-primary" size={18} />
+              <span className="text-2xl font-heading font-extrabold text-onSurface">{data.participants.length}</span>
+              <SectionLabel>Invitados</SectionLabel>
+            </Card>
+            <Card className="p-4 flex flex-col gap-1.5">
+              <Wallet className="text-success" size={18} />
+              <span className="text-2xl font-heading font-extrabold text-onSurface">${total_pool.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
+              <SectionLabel>En gastos</SectionLabel>
+            </Card>
           </div>
         </div>
 
-        <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-[#e8ded8] mb-8">
+        <Card className="flex justify-between items-center p-4 rounded-2xl mb-8">
           <div>
-            <p className="text-[#7a706b] text-[10px] font-bold mb-1 uppercase tracking-wider">Tu cuota actual</p>
-            <p className="font-heading font-extrabold text-[#1c7327] text-xl">${myShare.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
+            <SectionLabel className="mb-1">Tu cuota actual</SectionLabel>
+            <p className="font-heading font-extrabold text-success text-xl">${myShare.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
           </div>
           <div className="text-right">
-            <p className="text-[#7a706b] text-[10px] font-bold mb-1 uppercase tracking-wider">Estado</p>
-            <div className="bg-[#e8ede9] text-[#5a706b] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">Asignando Gastos</div>
+            <SectionLabel className="mb-1">Estado</SectionLabel>
+            <div className="bg-surfaceHighest text-onSurfaceVariant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">Asignando Gastos</div>
           </div>
-        </div>
+        </Card>
 
-        <div className="flex bg-[#e8ded8] p-1 rounded-[1rem] mb-8">
-          <button onClick={() => setOpenTab('consumos')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'consumos' ? 'text-[#2b2725] bg-white shadow-sm' : 'text-[#7a706b] hover:text-[#2b2725]'}`}>Tu Consumo</button>
-          <button onClick={() => setOpenTab('resumen')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'resumen' ? 'text-[#2b2725] bg-white shadow-sm' : 'text-[#7a706b] hover:text-[#2b2725]'}`}>Asignación</button>
+        {/* Tab switcher */}
+        <div className="flex bg-surfaceHighest p-1 rounded-inner mb-8">
+          <button onClick={() => setOpenTab('consumos')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'consumos' ? 'text-onSurface bg-white shadow-sm' : 'text-onSurfaceVariant hover:text-onSurface'}`}>Tu Consumo</button>
+          <button onClick={() => setOpenTab('resumen')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'resumen' ? 'text-onSurface bg-white shadow-sm' : 'text-onSurfaceVariant hover:text-onSurface'}`}>Asignación</button>
         </div>
 
         {openTab === 'consumos' && allItems.length > 0 && (
@@ -150,31 +143,31 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
                   const myItems = myExp.flatMap((e: any) => e.items).map((it: any) => ({ name: it.name, amount: it.amount.toString() }));
                   navigate(`/e/${shareToken}/join?edit=true`, { state: { name: currentUser?.name, alias: currentUser?.alias, items: myItems } });
                 }}
-                className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a] bg-[#b83a0a]/10 px-3 py-1.5 rounded-[0.5rem] hover:bg-[#b83a0a]/20 transition-colors"
+                className="text-[10px] font-bold tracking-widest uppercase text-primary bg-primaryLight/50 px-3 py-1.5 rounded-sm hover:bg-primaryLight transition-colors"
               >
                 Editar mis gastos
               </button>
             </div>
-            <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-3 shadow-sm">
-              <p className="text-xs text-[#7a706b] mb-4 font-medium leading-relaxed">Destildá lo que no consumiste tocando el ítem. Tu cuota se va a descontar proporcionalmente y el resto la absorberá.</p>
+            <Card variant="surface" className="p-5 space-y-3">
+              <p className="text-xs text-onSurfaceVariant mb-4 font-medium leading-relaxed">Destildá lo que no consumiste tocando el ítem. Tu cuota se va a descontar proporcionalmente y el resto la absorberá.</p>
               {allItems.map((it: any) => {
                 const isConsuming = it.consumers.some((c: any) => c.id === currentUser?.id);
                 return (
-                  <div key={it.id} onClick={() => toggleMutation.mutate(it.id)} className={`flex justify-between items-center p-3 rounded-xl border cursor-pointer transition-all active:scale-[0.98] ${isConsuming ? 'bg-white border-[#f2ece9] shadow-sm' : 'bg-[#e8ded8]/30 border-transparent opacity-70'}`}>
+                  <div key={it.id} onClick={() => toggleMutation.mutate(it.id)} className={`flex justify-between items-center p-3 rounded-xl border cursor-pointer transition-all active:scale-[0.98] ${isConsuming ? 'bg-white border-surfaceLow shadow-sm' : 'bg-surfaceHighest/30 border-transparent opacity-70'}`}>
                     <div className="flex items-center gap-3">
-                      <div className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors ${isConsuming ? 'bg-[#1c7327] text-white' : 'bg-[#d9d2ce] text-[#7a706b]'}`}>
+                      <div className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors ${isConsuming ? 'bg-success text-white' : 'bg-outlineVariant text-onSurfaceVariant'}`}>
                         {isConsuming ? <Check size={14} strokeWidth={4} /> : <X size={14} strokeWidth={4} />}
                       </div>
-                      <span className={`font-bold text-sm ${isConsuming ? 'text-[#2b2725]' : 'text-[#7a706b] line-through decoration-[#a39a95]'}`}>{it.name}</span>
+                      <span className={`font-bold text-sm ${isConsuming ? 'text-onSurface' : 'text-onSurfaceVariant line-through decoration-outlineVariant'}`}>{it.name}</span>
                     </div>
                     <div className="text-right">
-                      <p className={`font-bold text-sm ${isConsuming ? 'text-[#1c7327]' : 'text-[#7a706b]'}`}>${it.amount.toLocaleString('es-AR')}</p>
-                      <p className="text-[9px] text-[#7a706b] font-bold uppercase tracking-widest mt-0.5">{it.consumers.length} comparten</p>
+                      <p className={`font-bold text-sm ${isConsuming ? 'text-success' : 'text-onSurfaceVariant'}`}>${it.amount.toLocaleString('es-AR')}</p>
+                      <p className="text-[9px] text-onSurfaceVariant font-bold uppercase tracking-widest mt-0.5">{it.consumers.length} comparten</p>
                     </div>
                   </div>
                 );
               })}
-            </div>
+            </Card>
           </div>
         )}
 
@@ -192,40 +185,40 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
                 }, 0);
 
                 return (
-                  <div key={p.id} className="bg-white p-6 rounded-2xl shadow-sm border border-[#e8ded8] relative">
-                    {currentUser?.id === p.id && <div className="absolute top-0 right-0 bg-black text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-bl-xl rounded-tr-2xl">Vos</div>}
+                  <Card key={p.id} className="p-6 relative">
+                    {currentUser?.id === p.id && <div className="absolute top-0 right-0 bg-onSurface text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-bl-xl rounded-tr-card">Vos</div>}
                     <div className="flex justify-between items-center mb-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full border border-[#f2ece9] flex items-center justify-center font-heading font-bold text-lg text-black bg-white">
+                        <div className="w-12 h-12 rounded-full border border-surfaceLow flex items-center justify-center font-heading font-bold text-lg text-onSurface bg-white">
                           {p.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
                           <p className="font-heading font-extrabold text-[16px]">{p.name}</p>
-                          <p className="text-[12px] font-bold text-[#b83a0a] uppercase tracking-widest">Compras: ${participantPaid.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
+                          <p className="text-[12px] font-bold text-primary uppercase tracking-widest">Compras: ${participantPaid.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         {adminToken && currentUser?.is_creator && (
-                          <button onClick={() => setEditingParticipant(p)} className="w-9 h-9 rounded-full bg-[#b83a0a]/10 flex items-center justify-center text-[#b83a0a] hover:bg-[#b83a0a]/20 transition-colors">
+                          <button onClick={() => setEditingParticipant(p)} className="w-9 h-9 rounded-full bg-primaryLight flex items-center justify-center text-primary hover:bg-primaryLight/80 transition-colors">
                             <Pencil size={15} strokeWidth={2.5} />
                           </button>
                         )}
                         <div className="text-right">
-                          <p className="text-[10px] font-bold text-[#7a706b] uppercase tracking-widest mb-0.5">Cuota DT</p>
+                          <SectionLabel className="mb-0.5 block">Cuota DT</SectionLabel>
                           <p className="font-heading font-bold text-xl">${participantOwesTotal.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
                         </div>
                       </div>
                     </div>
                     {itemsConsumed.length > 0 && (
-                      <div className="bg-[#fcf8f7] border border-[#e8ded8] rounded-xl p-3 mb-6">
-                        <p className="text-[9px] text-[#7a706b] uppercase font-bold tracking-widest mb-2 px-1">Detalle de consumos</p>
+                      <div className="bg-surface border border-outlineVariant rounded-xl p-3 mb-6">
+                        <SectionLabel className="mb-2 px-1 block">Detalle de consumos</SectionLabel>
                         <div className="space-y-1.5">
                           {itemsConsumed.map((it: any, idx: number) => {
                             const isFallback = it.consumers.length === 0;
                             const frac = isFallback ? it.amount / (data.participants.length || 1) : it.amount / it.consumers.length;
                             return (
-                              <div key={idx} className="flex justify-between items-center text-[11px] font-semibold text-[#5a504b] px-1">
-                                <span className="flex items-center gap-1.5"><ShoppingBag size={10} className="text-[#b83a0a]/50" /> {it.name} <span className="text-[9px] text-[#a39a95]">({isFallback ? 'todos' : `${it.consumers.length} pers`})</span></span>
+                              <div key={idx} className="flex justify-between items-center text-[11px] font-semibold text-onSurfaceVariant px-1">
+                                <span className="flex items-center gap-1.5"><ShoppingBag size={10} className="text-primary/50" /> {it.name} <span className="text-[9px] text-outlineVariant">({isFallback ? 'todos' : `${it.consumers.length} pers`})</span></span>
                                 <span>${frac.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                               </div>
                             );
@@ -233,47 +226,51 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
                         </div>
                       </div>
                     )}
-                  </div>
+                  </Card>
                 );
               })}
             </div>
 
             {currentUser?.is_creator ? (
-              <div className="pt-2 flex flex-col items-center w-full mt-8 border-t border-[#e8ded8]">
+              <div className="pt-2 flex flex-col items-center w-full mt-8 border-t border-outlineVariant">
                 <div className="w-full pt-8">
-                  <button onClick={() => settleMutation.mutate()} disabled={settleMutation.isPending} className="w-full py-5 bg-[#b83a0a] text-white rounded-[1.25rem] text-[15px] font-heading font-bold transition-transform active:scale-[0.98] shadow-[0_8px_30px_rgba(184,58,10,0.3)] flex justify-center items-center gap-2 hover:bg-[#8a2905] disabled:opacity-70">
+                  <Button
+                    onClick={() => settleMutation.mutate()}
+                    disabled={settleMutation.isPending}
+                    className="w-full"
+                  >
                     <PanelTopClose size={20} /> {settleMutation.isPending ? 'LIQUIDANDO...' : 'LIQUIDAR ASADETE'}
-                  </button>
-                  <p className="text-[9px] text-center text-[#7a706b] font-bold mt-4 uppercase tracking-widest">Solo el DT de la fecha puede cerrar la cuenta</p>
+                  </Button>
+                  <p className="text-[9px] text-center text-onSurfaceVariant font-bold mt-4 uppercase tracking-widest">Solo el DT de la fecha puede cerrar la cuenta</p>
                 </div>
               </div>
             ) : (
-              <p className="text-[10px] text-center text-[#b83a0a] bg-[#fcf8f7] border border-[#f2ece9] p-4 rounded-xl font-bold mt-8 uppercase tracking-widest">Esperando que el DT liquide la cuenta...</p>
+              <p className="text-[10px] text-center text-primary bg-surface border border-surfaceLow p-4 rounded-xl font-bold mt-8 uppercase tracking-widest">Esperando que el DT liquide la cuenta...</p>
             )}
           </div>
         )}
 
         {adminToken && currentUser?.is_creator && (
-          <div className="flex items-center justify-between bg-[#1f1a17] rounded-[1.25rem] px-5 py-3.5 mt-6 mb-2">
+          <Card variant="dark" className="flex items-center justify-between px-5 py-3.5 mt-6 mb-2">
             <div className="flex items-center gap-2">
-              <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-[#b83a0a] px-2 py-1 rounded-md">DT</span>
+              <span className="text-white text-[9px] font-black tracking-[0.2em] uppercase bg-primary px-2 py-1 rounded-md">DT</span>
               <span className="text-white/80 text-[11px] font-bold">Modo Director Técnico</span>
             </div>
-            <button onClick={() => setOpenTab('resumen')} className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase text-white bg-white/15 px-3 py-1.5 rounded-[0.5rem] hover:bg-white/25 transition-colors">
+            <button onClick={() => setOpenTab('resumen')} className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase text-white bg-white/15 px-3 py-1.5 rounded-sm hover:bg-white/25 transition-colors">
               <Pencil size={12} /> Editar gastos
             </button>
-          </div>
+          </Card>
         )}
       </div>
 
       <BottomNav
-        activeTab={navView === 'DEUDAS' ? 'DEUDAS' : 'GASTOS'}
-        onGastos={() => { setNavView('GASTOS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        onDeudas={() => { setNavView('DEUDAS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        activeTab="GASTOS"
+        onGastos={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onDeudas={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onCompartir={() => copy(`${window.location.origin}/e/${shareToken}/join`)}
         onAyuda={() => navigate(`/e/${shareToken}/ayuda`)}
         copiedLink={copied}
       />
-    </div>
+    </PageLayout>
   );
 }

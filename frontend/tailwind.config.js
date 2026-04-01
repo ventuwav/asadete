@@ -12,10 +12,19 @@ export default {
         body: ['Inter', 'sans-serif'],
       },
       borderRadius: {
+        hero: '2rem',
+        section: '1.5rem',
+        card: '1.25rem',
+        inner: '1rem',
+        // legacy aliases (no borrar — evitan romper código existente)
         xl: '1.25rem',
         lg: '1rem',
         md: '0.75rem',
-        sm: '0.5rem'
+        sm: '0.5rem',
+      },
+      boxShadow: {
+        cta: '0 8px 30px rgba(184, 58, 10, 0.3)',
+        card: '0 2px 8px rgba(31, 26, 23, 0.06)',
       },
       colors: {
         surface: '#fcf8f7',
