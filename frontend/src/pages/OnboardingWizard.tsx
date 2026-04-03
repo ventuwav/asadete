@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Users, Flame, CheckCircle } from 'lucide-react';
 import Grill from '../components/Grill';
 import { Button } from '../components/ui/button';
@@ -49,14 +48,13 @@ const slides = [
     ),
     title: 'Y todos felices',
     body: 'Se asignan los gastos según quién consumió qué, y el sistema calcula quién le debe a quién con las mínimas transferencias posibles.',
-    cta: '¡Arrancamos!',
+    cta: '¡Arranquemos!',
   },
 ];
 
-export default function OnboardingWizard() {
+export default function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
   const [current, setCurrent] = useState(0);
   const [exiting, setExiting] = useState(false);
-  const navigate = useNavigate();
 
   // Warm up backend silently
   useEffect(() => {
@@ -72,13 +70,13 @@ export default function OnboardingWizard() {
       }, 200);
     } else {
       localStorage.setItem('asadete_onboarding_done', '1');
-      navigate('/');
+      onComplete();
     }
   };
 
   const skip = () => {
     localStorage.setItem('asadete_onboarding_done', '1');
-    navigate('/');
+    onComplete();
   };
 
   const slide = slides[current];
