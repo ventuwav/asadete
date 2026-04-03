@@ -121,9 +121,9 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
             <SectionLabel className="mb-1">Tu cuota actual</SectionLabel>
             <p className="font-heading font-extrabold text-success text-xl">${myShare.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
           </div>
-          <div className="text-right">
-            <SectionLabel className="mb-1">Estado</SectionLabel>
-            <div className="bg-surfaceHighest text-onSurfaceVariant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">Asignando Gastos</div>
+          <div className="text-right flex flex-col items-end gap-1">
+            <SectionLabel>Estado</SectionLabel>
+            <div className="bg-surfaceHighest text-onSurfaceVariant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Asignando Gastos</div>
           </div>
         </Card>
 
