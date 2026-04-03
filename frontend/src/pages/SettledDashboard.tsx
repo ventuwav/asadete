@@ -258,7 +258,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
               disabled={revertMutation.isPending}
               className="w-full"
             >
-              Des-liquidar <History size={16} />
+              Reversión <History size={16} />
             </Button>
             <Button
               variant="outline"
