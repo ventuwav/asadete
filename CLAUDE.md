@@ -291,9 +291,8 @@ while debtors and creditors:
 | `outlineVariant` | `#d9d0c8` | Borders muy sutiles |
 
 ### Tipografía
-- **Logo "asaDeTe":** `TeX Gyre Adventor` (font-brand) — self-hosted en `/public/fonts/`, solo D y T en mayúscula
-- **Headings:** `Plus Jakarta Sans` (font-heading) — bold/extrabold
-- **Body:** `Inter` (font-body) — regular/medium
+- **Headings + Logo:** `TeX Gyre Adventor` (font-heading) — self-hosted en `/public/fonts/`, usado para todos los títulos, números y el logo "asaDeTe"
+- **Body:** `Inter` (font-body) — regular/medium para texto corrido y labels
 - **Labels de sección:** `text-[10px] font-bold tracking-widest uppercase text-onSurfaceVariant`
 
 ### Border Radius (tokens nombrados en tailwind.config.js)

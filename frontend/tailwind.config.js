@@ -8,9 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+        heading: ['"TeX Gyre Adventor"', 'sans-serif'],
         body: ['Inter', 'sans-serif'],
-        brand: ['"TeX Gyre Adventor"', '"Josefin Sans"', 'sans-serif'],
       },
       borderRadius: {
         hero: '2rem',
