@@ -53,23 +53,23 @@ export default function CreateEvent() {
       <AppHeader variant="large" />
 
       <div className="w-full max-w-md px-6 pt-4 animate-in fade-in">
-        <Card variant="default" className="p-8 text-center flex flex-col items-center relative overflow-hidden mb-8 rounded-hero">
-          <div className="absolute right-0 bottom-0 opacity-5 scale-150 translate-x-1/4 translate-y-1/4">
-            <Grill size={200} />
-          </div>
-          <SectionLabel variant="primary" className="mb-2 relative z-10">¡Hola, Prepará la táctica!</SectionLabel>
-          <h1 className="text-[32px] font-heading font-extrabold tracking-tight text-onSurface mb-3 relative z-10 leading-[1.1]">¿Sale ese<br />asado?</h1>
-          <p className="text-onSurfaceVariant text-[13px] font-medium leading-relaxed mb-6 relative z-10">Organizá los gastos, las deudas y el<br />fuego en un toque.</p>
-
-          {serverStatus === 'slow' && (
-            <div className="flex items-center gap-2 text-[11px] font-medium text-onSurfaceVariant mb-2 relative z-10 justify-center animate-in fade-in">
-              <span className="w-2 h-2 rounded-full bg-primary/60 animate-pulse flex-shrink-0" />
-              Iniciando servidor, ya casi...
+        {!createdEvent ? (
+          <Card variant="default" className="p-8 text-center flex flex-col items-center relative overflow-hidden mb-8 rounded-hero">
+            <div className="absolute right-0 bottom-0 opacity-5 scale-150 translate-x-1/4 translate-y-1/4">
+              <Grill size={200} />
             </div>
-          )}
+            <SectionLabel variant="primary" className="mb-2 relative z-10">¡Hola, Prepará la táctica!</SectionLabel>
+            <h1 className="text-[32px] font-heading font-extrabold tracking-tight text-onSurface mb-3 relative z-10 leading-[1.1]">¿Sale ese<br />asado?</h1>
+            <p className="text-onSurfaceVariant text-[13px] font-medium leading-relaxed mb-6 relative z-10">Organizá los gastos, las deudas y el<br />fuego en un toque.</p>
 
-          <form onSubmit={handleSubmit} className="w-full relative z-10 space-y-4">
-            {!createdEvent && (
+            {serverStatus === 'slow' && (
+              <div className="flex items-center gap-2 text-[11px] font-medium text-onSurfaceVariant mb-2 relative z-10 justify-center animate-in fade-in">
+                <span className="w-2 h-2 rounded-full bg-primary/60 animate-pulse flex-shrink-0" />
+                Iniciando servidor, ya casi...
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="w-full relative z-10 space-y-4">
               <input
                 required
                 autoFocus
@@ -78,25 +78,25 @@ export default function CreateEvent() {
                 placeholder="Ej: Asado del Domingo"
                 className="w-full bg-surfaceLow border-transparent rounded-inner p-4 text-center focus:outline-none focus:ring-2 focus:ring-primary/30 text-onSurface font-medium placeholder:text-outlineVariant"
               />
-            )}
-            <Button
-              type="submit"
-              disabled={loading || (!name.trim() && !createdEvent) || !!createdEvent}
-              className="w-full"
-            >
-              <span className="bg-white text-primary rounded-full w-5 h-5 flex items-center justify-center text-lg leading-none pt-0.5 pb-1">+</span>
-              CREAR ASADO
-            </Button>
-          </form>
-        </Card>
+              <Button type="submit" disabled={loading || !name.trim()} className="w-full">
+                <span className="bg-white text-primary rounded-full w-5 h-5 flex items-center justify-center text-lg leading-none pt-0.5 pb-1">+</span>
+                {loading ? 'Creando...' : 'CREAR ASADO'}
+              </Button>
+            </form>
+          </Card>
+        ) : (
+          <Card variant="default" className="p-8 text-center flex flex-col items-center relative overflow-hidden mb-8 rounded-hero animate-in fade-in">
+            <div className="absolute right-0 bottom-0 opacity-5 scale-150 translate-x-1/4 translate-y-1/4">
+              <Grill size={200} />
+            </div>
+            <span className="bg-successBg/60 text-success text-[9px] font-extrabold px-3 py-1 rounded-full tracking-widest uppercase mb-4 relative z-10">ACTIVO</span>
+            <h1 className="text-[28px] font-heading font-extrabold tracking-tight text-onSurface relative z-10 leading-tight mb-2">{name}</h1>
+            <p className="text-onSurfaceVariant text-[13px] font-medium relative z-10">Tu asado está listo para arrancar.</p>
+          </Card>
+        )}
 
         {createdEvent && (
           <div className="animate-in fade-in slide-in-from-top-4 space-y-6">
-            <div className="flex justify-between items-center px-1">
-              <h2 className="text-[17px] font-heading font-extrabold">Tu Asado está listo</h2>
-              <span className="bg-successBg/60 text-success text-[9px] font-extrabold px-3 py-1 rounded-full tracking-widest uppercase">ACTIVO</span>
-            </div>
-
             <Card className="p-6 flex flex-col items-center">
               <div className="p-2 border-[1.5px] border-outlineVariant rounded-xl mb-4">
                 <QRCodeSVG value={getJoinUrl()} size={160} bgColor="#ffffff" fgColor="#3b3836" level="M" />
