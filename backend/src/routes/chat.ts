@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import Groq from 'groq-sdk';
 
 const router = Router();
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const ChatSchema = z.object({
   message: z.string().min(1).max(500),
@@ -11,9 +13,9 @@ const ChatSchema = z.object({
   })).optional().default([]),
 });
 
-const SYSTEM_PROMPT = `Sos el asistente virtual de Asadete, una app argentina para organizar y dividir los gastos de un asado entre amigos.
+const SYSTEM_PROMPT = `Sos el asistente virtual de asaDeTe, una app argentina para organizar y dividir los gastos de un asado entre amigos.
 
-Cómo funciona Asadete:
+Cómo funciona asaDeTe:
 1. Alguien crea el evento (el asador / DT).
 2. El DT comparte un link único con los participantes.
 3. Cada participante se suma al evento y carga lo que gastó (ítems + montos).
@@ -29,41 +31,31 @@ Conceptos clave:
 - Consumidores de un ítem: Si un ítem tiene consumidores asignados, el costo se divide solo entre ellos. Si no tiene, se divide entre todos los participantes.
 - Estado del evento: "abierto" → "liquidado" → "cerrado".
 
-Respondé siempre en español rioplatense, de manera amigable y concisa. Si te preguntan algo que no tiene que ver con Asadete, redirigí amablemente la conversación al uso de la app.`;
+Respondé siempre en español rioplatense, de manera amigable y concisa. Si te preguntan algo que no tiene que ver con asaDeTe, redirigí amablemente la conversación al uso de la app.`;
 
 router.post('/', async (req, res, next) => {
   try {
     const { message, history } = ChatSchema.parse(req.body);
 
-    const contents = [
+    const messages = [
       ...history.map((m) => ({
-        role: m.role,
-        parts: [{ text: m.text }],
+        role: m.role === 'model' ? 'assistant' : 'user' as 'user' | 'assistant',
+        content: m.text,
       })),
-      { role: 'user', parts: [{ text: message }] },
+      { role: 'user' as const, content: message },
     ];
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents,
-        }),
-      }
-    );
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      max_tokens: 512,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages,
+      ],
+    });
 
-    if (!geminiRes.ok) {
-      const err = await geminiRes.json().catch(() => ({}));
-      throw new Error((err as any).error?.message || 'Gemini API error');
-    }
-
-    const data = await geminiRes.json();
-    const text: string =
-      (data as any).candidates?.[0]?.content?.parts?.[0]?.text ||
-      'No pude generar una respuesta.';
+    const text = response.choices[0]?.message?.content
+      ?? 'No pude generar una respuesta.';
 
     res.json({ response: text });
   } catch (err) {
