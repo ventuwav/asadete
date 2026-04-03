@@ -64,13 +64,27 @@ Asadete es una **PWA mobile-first** para organizar y liquidar los gastos de un a
     ├── vercel.json
     ├── tailwind.config.js
     └── src/
-        ├── App.tsx       ← Routing
+        ├── App.tsx       ← Routing + Toaster global (react-hot-toast)
         ├── pages/
+        │   ├── OnboardingWizard.tsx  ← Wizard 4 slides (primer ingreso) + warm-up backend
         │   ├── CreateEvent.tsx
         │   ├── JoinEvent.tsx
         │   ├── Dashboard.tsx
+        │   ├── OpenDashboard.tsx
+        │   ├── SettledDashboard.tsx
+        │   ├── ClosedDashboard.tsx
         │   ├── ShareEvent.tsx
+        │   ├── HelpChat.tsx
         │   └── EditParticipantModal.tsx
+        ├── components/
+        │   ├── AppHeader.tsx     ← variant="large" | "compact"
+        │   ├── BottomNav.tsx     ← button elements, aria-labels, 44px touch target
+        │   ├── Card.tsx          ← variant="default"|"surface"|"muted"|"dark"
+        │   ├── Input.tsx         ← variant="field"|"inner"
+        │   ├── SectionLabel.tsx  ← variant="default"|"primary"
+        │   ├── PageLayout.tsx    ← pb dinámico con safe-area-inset
+        │   ├── Grill.tsx         ← ícono SVG custom
+        │   └── ui/button.tsx     ← variant="cta"|"secondary"|"outline"|"ghost"|"danger"
         └── lib/
 ```
 
@@ -263,36 +277,46 @@ while debtors and creditors:
 ### Paleta de Colores
 | Token | Valor | Uso |
 |-------|-------|-----|
-| `surface` | `#fcf8f7` | Background principal |
-| `surfaceLow` | `#f2ece9` | Cards ligeramente más oscuras |
-| `surfaceHighest` | `#e8ded8` | Inputs, separadores, fondo de nav |
-| `primary` | `#b83a0a` | Color principal (Fire Orange), botones CTA, logo |
-| `primaryLight` | `#f5e4df` | Background suave de elementos primary |
-| `primaryDim` | `#8a2905` | Hover state de primary |
+| `surface` | `#faf7f4` | Background principal |
+| `surfaceLow` | `#f2ede8` | Cards ligeramente más oscuras |
+| `surfaceHighest` | `#e6dfd7` | Inputs, separadores, fondo de nav |
+| `primary` | `#cc5b0a` | Color principal (Amber cálido), botones CTA, logo |
+| `primaryLight` | `#fae8dc` | Background suave de elementos primary |
+| `primaryDim` | `#a3470a` | Hover state de primary |
 | `secondary` | `#2e2825` | Textos importantes secundarios |
 | `success` | `#1c7327` | Textos de confirmación |
 | `successBg` | `#96f39e` | Fondo de badges de éxito |
-| `onSurface` | `#1f1a17` | Texto principal (nunca `#000000` puro) |
+| `onSurface` | `#1e1a16` | Texto principal (nunca `#000000` puro) |
 | `onSurfaceVariant` | `#7a706b` | Texto secundario / subtítulos |
-| `outlineVariant` | `#d9d2ce` | Borders muy sutiles |
+| `outlineVariant` | `#d9d0c8` | Borders muy sutiles |
 
 ### Tipografía
+- **Logo "asaDeTe":** `TeX Gyre Adventor` (font-brand) — self-hosted en `/public/fonts/`, solo D y T en mayúscula
 - **Headings:** `Plus Jakarta Sans` (font-heading) — bold/extrabold
 - **Body:** `Inter` (font-body) — regular/medium
 - **Labels de sección:** `text-[10px] font-bold tracking-widest uppercase text-onSurfaceVariant`
 
-### Border Radius
-- `rounded-[2rem]` — Imágenes hero, cards grandes
-- `rounded-[1.5rem]` — Secciones / containers
-- `rounded-[1.25rem]` — Cards, botones, inputs
-- `rounded-full` — Avatares, badges
+### Border Radius (tokens nombrados en tailwind.config.js)
+- `rounded-hero` (`2rem`) — Cards grandes, hero sections
+- `rounded-section` (`1.5rem`) — Secciones / containers
+- `rounded-card` (`1.25rem`) — Cards, botones, inputs estándar
+- `rounded-inner` (`1rem`) — Inputs internos, elementos secundarios
+- `rounded-full` — Avatares, badges, pills
+
+### Sombras (tokens nombrados en tailwind.config.js)
+- `shadow-cta` — Glow naranja para botones CTA primarios
+- `shadow-card` — Elevación sutil para cards de contenido
 
 ### Reglas de Diseño
-1. **Nunca usar `#000000` puro.** Usar `onSurface` (`#1f1a17`).
-2. **Sin bordes agresivos.** Usar `border border-outlineVariant` (1px, sutil) o sin borde.
-3. **Sombras suaves:** `shadow-sm`, `shadow-md`, `shadow-[0_8px_30px_rgba(184,58,10,0.3)]` para CTAs.
-4. **Micro-animaciones:** `animate-in fade-in`, `slide-in-from-top-4`, `hover:scale-110 transition-transform`.
-5. **Botón CTA principal:** `bg-primary text-white rounded-[1.25rem] py-5 shadow-[0_8px_30px_rgba(184,58,10,0.3)]`.
+1. **Nunca usar `#000000` puro.** Usar `onSurface` (`#1e1a16`).
+2. **Sin gradientes.** Todos los fondos son colores planos.
+3. **Sin bordes agresivos.** Usar `border border-outlineVariant` (1px, sutil) o sin borde.
+4. **Sombras suaves:** `shadow-sm`, `shadow-card`, `shadow-cta` para CTAs.
+5. **Micro-animaciones:** `animate-in fade-in`, `slide-in-from-top-4`, `active:scale-[0.98]`.
+6. **Botón CTA principal:** componente `<Button>` variant="cta" — nunca construirlo a mano.
+7. **Grill icon:** siempre `fill="currentColor"` — nunca valores hex hardcodeados.
+8. **Toasts:** usar `react-hot-toast` para feedback de acciones. Nunca `alert()`.
+9. **Acciones destructivas:** siempre mostrar modal de confirmación antes de ejecutar.
 
 ### Ícono Custom (Grill SVG)
 ```tsx
@@ -334,7 +358,7 @@ npx prisma studio    # GUI para explorar la DB
 - Unirse al evento con nombre, alias y gastos (ítems detallados)
 - Dashboard completo: resumen de gastos, participantes, deudas
 - Liquidación con algoritmo de transferencias mínimas
-- Revertir liquidación
+- Revertir liquidación (con modal de confirmación)
 - Marcar pagos como pagados / confirmados
 - Cierre automático del evento cuando todas las deudas están confirmadas
 - Edición de cuenta propia (participante puede editar sus datos y gastos)
@@ -342,8 +366,13 @@ npx prisma studio    # GUI para explorar la DB
 - Recuperación de sesión via `localStorage` (`participant_token`)
 - Toggle de consumidores por ítem (M2M)
 - Stat cards en Dashboard (total evento, tu gasto, tu balance)
-- Logo "Asadete" consistente en todas las páginas
-- Bottom navigation bar en todas las vistas
+- Logo "asaDeTe" con font-brand (TeX Gyre Adventor) en todas las páginas
+- Bottom navigation bar en todas las vistas (button elements, aria-labels, 44px touch)
+- Onboarding wizard de 4 slides al primer ingreso (warm-up del backend incluido)
+- Indicador "Iniciando servidor..." cuando el backend está durmiendo (Render)
+- Toasts de éxito/error en todas las acciones (react-hot-toast)
+- Empty state en Dashboard cuando no hay gastos cargados
+- Modal de confirmación antes de Reversión y Archivar Asado
 
 ### 🔲 Pendiente / Ideas futuras
 - Notificaciones push cuando alguien te paga
@@ -525,11 +554,19 @@ npm run dev   # desarrollo local (puerto 3000)
 
 ## 14. Reglas de Comportamiento para el AI
 
-1. **Siempre respetar el Design System** descrito en la sección 10. No usar colores ad-hoc.
-2. **No usar `#000000` nunca.** Usar `#1f1a17` (`onSurface`).
-3. **Sesión lightweight** via `participant_token` en `localStorage`. No hay login real.
-4. **El asador es la autoridad máxima.** El creador (`is_creator: true`) tiene poderes de admin.
-5. **Balances calculados por ítem consumido**, no por división uniforme del total.
-6. **Redondeo a 2 decimales** en todos los cálculos monetarios para evitar errores IEEE 754.
-7. **Mobile-first:** todas las páginas tienen `max-w-md mx-auto` y bottom nav.
-8. **Íconos:** lucide-react + el Grill SVG custom (siempre con `text-primary` o `fill-primary`).
+1. **Siempre respetar el Design System** descrito en la sección 10. No usar colores ad-hoc ni valores hex hardcodeados.
+2. **No usar `#000000` nunca.** Usar `onSurface` (`#1e1a16`).
+3. **Sin gradientes.** Todos los fondos son planos. No usar `bg-gradient-*`.
+4. **Nombre de la app:** siempre `asaDeTe` — solo D y T en mayúscula. Nunca "Asadete".
+5. **Logo:** usar componente `<AppHeader>` existente. La font `font-brand` (TeX Gyre Adventor) aplica sola.
+6. **Grill icon:** siempre `fill="currentColor"`. Nunca `fill="#..."` hardcodeado.
+7. **Feedback al usuario:** usar `toast.success()` / `toast.error()` de `react-hot-toast`. Nunca `alert()`.
+8. **Acciones destructivas** (revertir, archivar, borrar): mostrar siempre modal de confirmación con descripción del impacto.
+9. **Sesión lightweight** via `participant_token` en `localStorage`. No hay login real.
+10. **El asador es la autoridad máxima.** El creador (`is_creator: true`) tiene poderes de admin.
+11. **Balances calculados por ítem consumido**, no por división uniforme del total.
+12. **Redondeo a 2 decimales** en todos los cálculos monetarios para evitar errores IEEE 754.
+13. **Mobile-first:** todas las páginas usan `<PageLayout>` con `max-w-md mx-auto` y `<BottomNav>`.
+14. **Touch targets:** mínimo 44×44px en todos los elementos interactivos. Usar `<Button>` o `min-w-[44px] min-h-[44px]`.
+15. **Accesibilidad:** todos los botones icon-only deben tener `aria-label`.
+16. **Deploy desde Claude Code:** Al terminar un cambio, hacer commit y push directamente. No pedirle al usuario que lo haga. Vercel (frontend) hace auto-deploy en cada push a `main`.
