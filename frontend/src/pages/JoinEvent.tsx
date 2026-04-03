@@ -104,7 +104,7 @@ export default function JoinEvent() {
       <div className="px-6 py-4 max-w-md mx-auto w-full space-y-8 animate-in fade-in">
         <div className="w-full h-[220px] rounded-hero overflow-hidden relative shadow-md">
           <img src="https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover" alt="Asado" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute bottom-6 left-6 right-6">
             <h1 className="text-[32px] font-heading font-bold text-white leading-tight drop-shadow-md">
               {prefill?.eventName || eventData?.name || 'Cargando asado...'}

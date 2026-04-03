@@ -9,10 +9,10 @@ const slides = [
   {
     icon: (
       <div className="flex flex-col items-center gap-3">
-        <div className="bg-gradient-to-br from-white to-surface w-24 h-24 rounded-[1.5rem] flex items-center justify-center shadow-md border border-surfaceHighest/50">
-          <Grill className="text-primary" fill="#b83a0a" size={52} />
+        <div className="bg-white w-24 h-24 rounded-[1.5rem] flex items-center justify-center shadow-sm border border-outlineVariant/40">
+          <Grill className="text-primary" fill="currentColor" size={52} />
         </div>
-        <span className="font-heading font-extrabold text-4xl tracking-tight text-primary italic">
+        <span className="font-brand font-bold text-4xl tracking-wide text-primary leading-none">
           asaDeTe
         </span>
       </div>

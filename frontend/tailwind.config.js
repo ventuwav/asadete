@@ -10,6 +10,7 @@ export default {
       fontFamily: {
         heading: ['"Plus Jakarta Sans"', 'sans-serif'],
         body: ['Inter', 'sans-serif'],
+        brand: ['"TeX Gyre Adventor"', '"Josefin Sans"', 'sans-serif'],
       },
       borderRadius: {
         hero: '2rem',
@@ -23,23 +24,23 @@ export default {
         sm: '0.5rem',
       },
       boxShadow: {
-        cta: '0 8px 30px rgba(184, 58, 10, 0.3)',
+        cta: '0 8px 24px rgba(224, 124, 10, 0.28)',
         card: '0 2px 8px rgba(31, 26, 23, 0.06)',
       },
       colors: {
-        surface: '#fcf8f7',
-        surfaceLow: '#f2ece9',
-        surfaceHighest: '#e8ded8',
-        primary: '#b83a0a',
-        primaryLight: '#f5e4df',
-        primaryDim: '#8a2905',
+        surface: '#faf7f4',
+        surfaceLow: '#f2ede8',
+        surfaceHighest: '#e6dfd7',
+        primary: '#e07c0a',
+        primaryLight: '#fef0dc',
+        primaryDim: '#b86208',
         secondary: '#2e2825',
         success: '#1c7327',
         successBg: '#96f39e',
-        onSurface: '#1f1a17',
+        onSurface: '#1e1a16',
         onSurfaceVariant: '#7a706b',
-        outlineVariant: '#d9d2ce',
-        outlineVariantGhost: 'rgba(217, 210, 206, 0.5)'
+        outlineVariant: '#d9d0c8',
+        outlineVariantGhost: 'rgba(217, 208, 200, 0.5)'
       }
     }
   },

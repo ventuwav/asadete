@@ -18,10 +18,10 @@ export default function AppHeader(props: AppHeaderProps) {
   if (props.variant === 'large') {
     return (
       <header className="w-full max-w-md flex flex-col items-center justify-center p-6 pb-2 pt-8">
-        <div className="bg-gradient-to-br from-white to-surface w-20 h-20 mb-3 rounded-section flex items-center justify-center shadow-md border border-surfaceHighest/50">
-          <Grill className="text-primary" fill="#b83a0a" size={40} />
+        <div className="bg-white w-20 h-20 mb-3 rounded-section flex items-center justify-center shadow-sm border border-outlineVariant/40">
+          <Grill className="text-primary" fill="currentColor" size={40} />
         </div>
-        <span className="font-heading font-extrabold text-3xl tracking-tight text-primary italic leading-none">
+        <span className="font-brand font-bold text-3xl tracking-wide text-primary leading-none">
           asaDeTe
         </span>
         <span className="text-onSurfaceVariant font-bold text-[10px] tracking-widest uppercase mt-2">
@@ -40,8 +40,8 @@ export default function AppHeader(props: AppHeaderProps) {
       )}
     >
       <div className="flex items-center gap-2">
-        <Grill className="text-primary" fill="#b83a0a" size={24} />
-        <span className="font-heading font-bold text-lg tracking-tight text-primary italic">
+        <Grill className="text-primary" fill="currentColor" size={24} />
+        <span className="font-brand font-bold text-xl tracking-wide text-primary leading-none">
           asaDeTe
         </span>
       </div>
