@@ -250,7 +250,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
         </Card>
 
         {currentUser?.is_creator && (
-          <div className="pt-8 flex justify-center gap-4 pb-8 border-t border-outlineVariant mt-8">
+          <div className="pt-8 flex flex-col gap-3 pb-8 border-t border-outlineVariant mt-8">
             <Button
               variant="danger"
               size="md"
