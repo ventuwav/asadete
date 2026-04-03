@@ -11,7 +11,7 @@ interface Message {
 }
 
 const QUICK_QUESTIONS = [
-  '¿Cómo funciona Asadete?',
+  '¿Cómo funciona asaDeTe?',
   '¿Cómo liquido el asado?',
   '¿Qué es el alias?',
   '¿Cómo marco un pago?',
@@ -67,7 +67,7 @@ export default function HelpChat() {
             <Grill size={16} className="text-[#b83a0a]" fill="#b83a0a" />
           </div>
           <div>
-            <p className="text-[13px] font-heading font-bold leading-tight">Asistente Asadete</p>
+            <p className="text-[13px] font-heading font-bold leading-tight">Asistente asaDeTe</p>
             <p className="text-[10px] text-[#7a706b]">Preguntame lo que necesites</p>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function HelpChat() {
                 <Grill size={14} className="text-[#b83a0a]" fill="#b83a0a" />
               </div>
               <div className="bg-white rounded-[1.25rem] rounded-tl-sm px-4 py-3 shadow-sm border border-[#e8ded8] max-w-[80%]">
-                <p className="text-[13px] leading-relaxed">¡Hola! Soy el asistente de Asadete. ¿En qué te puedo ayudar?</p>
+                <p className="text-[13px] leading-relaxed">¡Hola! Soy el asistente de asaDeTe. ¿En qué te puedo ayudar?</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 pl-11">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Copy, Check, Link as LinkIcon } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
@@ -16,6 +16,16 @@ export default function CreateEvent() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [createdEvent, setCreatedEvent] = useState<{ share_token: string } | null>(null);
+  const [serverStatus, setServerStatus] = useState<'checking' | 'ready' | 'slow'>('checking');
+
+  useEffect(() => {
+    const BASE = import.meta.env.VITE_API_URL || '';
+    const slowTimer = setTimeout(() => setServerStatus('slow'), 2000);
+    fetch(`${BASE}/ping`)
+      .then(() => { clearTimeout(slowTimer); setServerStatus('ready'); })
+      .catch(() => { clearTimeout(slowTimer); setServerStatus('slow'); });
+    return () => clearTimeout(slowTimer);
+  }, []);
   const { copied, copy } = useCopyLink();
   const { copied: copiedNav, copy: copyNav } = useCopyLink();
   const navigate = useNavigate();
@@ -50,6 +60,13 @@ export default function CreateEvent() {
           <SectionLabel variant="primary" className="mb-2 relative z-10">¡Hola, Prepará la táctica!</SectionLabel>
           <h1 className="text-[32px] font-heading font-extrabold tracking-tight text-onSurface mb-3 relative z-10 leading-[1.1]">¿Sale ese<br />asado?</h1>
           <p className="text-onSurfaceVariant text-[13px] font-medium leading-relaxed mb-6 relative z-10">Organizá los gastos, las deudas y el<br />fuego en un toque.</p>
+
+          {serverStatus === 'slow' && (
+            <div className="flex items-center gap-2 text-[11px] font-medium text-onSurfaceVariant mb-2 relative z-10 justify-center animate-in fade-in">
+              <span className="w-2 h-2 rounded-full bg-primary/60 animate-pulse flex-shrink-0" />
+              Iniciando servidor, ya casi...
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="w-full relative z-10 space-y-4">
             {!createdEvent && (

@@ -98,7 +98,7 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
         <div className="mb-6">
           <div className="flex justify-between items-end mb-4">
             <div>
-              <p className="text-onSurfaceVariant text-xs font-bold mb-1 uppercase tracking-wider">Total Asadete</p>
+              <p className="text-onSurfaceVariant text-xs font-bold mb-1 uppercase tracking-wider">Total asaDeTe</p>
               <h2 className="text-4xl font-heading font-extrabold tracking-tight text-primary">${total_pool.toLocaleString('es-AR')}</h2>
             </div>
           </div>

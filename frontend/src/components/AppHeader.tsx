@@ -22,7 +22,7 @@ export default function AppHeader(props: AppHeaderProps) {
           <Grill className="text-primary" fill="#b83a0a" size={40} />
         </div>
         <span className="font-heading font-extrabold text-3xl tracking-tight text-primary italic leading-none">
-          Asadete
+          asaDeTe
         </span>
         <span className="text-onSurfaceVariant font-bold text-[10px] tracking-widest uppercase mt-2">
           El DT de tu asado
@@ -42,7 +42,7 @@ export default function AppHeader(props: AppHeaderProps) {
       <div className="flex items-center gap-2">
         <Grill className="text-primary" fill="#b83a0a" size={24} />
         <span className="font-heading font-bold text-lg tracking-tight text-primary italic">
-          Asadete
+          asaDeTe
         </span>
       </div>
       {right}
