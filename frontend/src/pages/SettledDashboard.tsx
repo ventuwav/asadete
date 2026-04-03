@@ -62,9 +62,9 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
         <div>
           <SectionLabel variant="primary" className="mb-2 block">Resumen de Liquidación</SectionLabel>
           <h1 className="text-4xl font-heading font-extrabold tracking-tight mb-4 leading-[1.1]">Cuentas claras,<br />amistad eterna.</h1>
-          <h2 className="text-[44px] font-heading font-bold tracking-tighter flex items-center gap-3">
-            <span className="text-2xl mt-1">$</span>{total_pool.toLocaleString(undefined, { minimumFractionDigits: 0 })}
-            <span className="text-[11px] font-bold text-onSurfaceVariant uppercase tracking-widest mt-2">balance total</span>
+          <h2 className="text-[clamp(2rem,10vw,2.75rem)] font-heading font-bold tracking-tighter flex items-baseline gap-2 flex-wrap">
+            <span className="text-2xl">${total_pool.toLocaleString(undefined, { minimumFractionDigits: 0 })}</span>
+            <span className="text-[11px] font-bold text-onSurfaceVariant uppercase tracking-widest">balance total</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 mt-5">
             <Card className="p-4 flex flex-col gap-1.5">

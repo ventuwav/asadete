@@ -97,23 +97,25 @@ export default function OnboardingWizard({ onComplete }: { onComplete: () => voi
 
       {/* Slide content */}
       <div
-        className={`flex-1 flex flex-col items-center justify-center text-center gap-6 transition-all duration-200 ${
+        className={`flex-1 flex flex-col items-center justify-center text-center transition-all duration-200 ${
           exiting ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
         }`}
       >
-        {slide.step && (
-          <span className="text-[10px] font-extrabold tracking-widest uppercase text-primary/60">
-            PASO {slide.step}
-          </span>
-        )}
+        {/* Zona de ícono — altura fija para que no salte entre slides */}
+        <div className="h-40 flex flex-col items-center justify-center mb-6">
+          {slide.icon}
+        </div>
 
-        {slide.icon}
-
-        <div className="space-y-3 max-w-xs">
+        <div className="space-y-2 max-w-xs">
+          {slide.step && (
+            <span className="text-[10px] font-extrabold tracking-widest uppercase text-primary/60 block mb-3">
+              PASO {slide.step}
+            </span>
+          )}
           <h1 className="font-heading font-extrabold text-2xl text-onSurface leading-tight tracking-tight">
             {slide.title}
           </h1>
-          <p className="text-onSurfaceVariant text-[14px] leading-relaxed font-medium">
+          <p className="text-onSurfaceVariant text-[14px] leading-relaxed font-medium pt-1">
             {slide.body}
           </p>
         </div>
