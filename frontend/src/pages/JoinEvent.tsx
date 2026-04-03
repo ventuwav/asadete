@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Calendar, CircleOff, ShoppingCart, Plus, X, User } from 'lucide-react';
 import Grill from '../components/Grill';
 import BottomNav from '../components/BottomNav';
@@ -90,9 +91,10 @@ export default function JoinEvent() {
       });
 
       localStorage.setItem(`asadete_${shareToken}`, joinData.participant_token);
+      toast.success(isEditing ? '¡Cambios guardados!' : '¡Te sumaste al asado!');
       navigate(`/e/${shareToken}`);
     } catch {
-      alert('Error uniendose al asado');
+      toast.error('No se pudo unir al asado. Intentá de nuevo.');
     }
     setLoading(false);
   };
@@ -106,7 +108,7 @@ export default function JoinEvent() {
           <img src="https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover" alt="Asado" />
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute bottom-6 left-6 right-6">
-            <h1 className="text-[32px] font-heading font-bold text-white leading-tight drop-shadow-md">
+            <h1 className="text-[32px] font-heading font-bold text-white leading-tight drop-shadow-md line-clamp-2">
               {prefill?.eventName || eventData?.name || 'Cargando asado...'}
             </h1>
             <p className="text-white/80 text-xs mt-2 flex items-center gap-1.5 font-medium">

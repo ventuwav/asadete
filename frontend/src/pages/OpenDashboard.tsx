@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Check, X, ShoppingBag, Wallet, PanelTopClose, Pencil } from 'lucide-react';
+import Grill from '../components/Grill';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BottomNav from '../components/BottomNav';
 import PageLayout from '../components/PageLayout';
@@ -132,6 +133,16 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
           <button onClick={() => setOpenTab('consumos')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'consumos' ? 'text-onSurface bg-white shadow-sm' : 'text-onSurfaceVariant hover:text-onSurface'}`}>Tu Consumo</button>
           <button onClick={() => setOpenTab('resumen')} className={`w-1/2 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-[0.8rem] transition-colors ${openTab === 'resumen' ? 'text-onSurface bg-white shadow-sm' : 'text-onSurfaceVariant hover:text-onSurface'}`}>Asignación</button>
         </div>
+
+        {openTab === 'consumos' && allItems.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in">
+            <div className="w-16 h-16 rounded-full bg-surfaceHighest flex items-center justify-center mb-4">
+              <Grill size={28} className="text-onSurfaceVariant" />
+            </div>
+            <p className="font-heading font-extrabold text-onSurface text-lg mb-1">Todavía no hay gastos</p>
+            <p className="text-onSurfaceVariant text-[13px] leading-relaxed max-w-[220px]">Cuando alguien cargue lo que gastó, acá vas a poder asignar tu consumo.</p>
+          </div>
+        )}
 
         {openTab === 'consumos' && allItems.length > 0 && (
           <div className="mb-8 animate-in slide-in-from-left-4 fade-in duration-300">

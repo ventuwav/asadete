@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Copy, Check, Link as LinkIcon } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import Grill from '../components/Grill';
@@ -42,8 +43,9 @@ export default function CreateEvent() {
         localStorage.setItem(`admin_token_${data.share_token}`, data.admin_token);
       }
       setCreatedEvent(data);
+      toast.success('¡Asado creado!');
     } catch {
-      alert('Error creando asado');
+      toast.error('No se pudo crear el asado. Intentá de nuevo.');
     }
     setLoading(false);
   };

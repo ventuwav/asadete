@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Receipt, Check, Wallet, History, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { User, Receipt, Check, Wallet, History, X, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import BottomNav from '../components/BottomNav';
 import PageLayout from '../components/PageLayout';
 import AppHeader from '../components/AppHeader';
@@ -23,6 +24,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
   const navigate = useNavigate();
   const { copied, copy } = useCopyLink();
   const [showDTPanel, setShowDTPanel] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<'revert' | 'archive' | null>(null);
 
   const total_pool = data.expenses.reduce((sum: number, e: any) => sum + e.total_amount, 0);
   const relevantDebts = currentUser
@@ -44,7 +46,8 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
 
   const revertMutation = useMutation({
     mutationFn: () => api.events.revert(shareToken),
-    onSuccess: onRefresh,
+    onSuccess: () => { toast.success('Liquidación revertida.'); onRefresh(); },
+    onError: () => toast.error('No se pudo revertir. Intentá de nuevo.'),
   });
 
   const userAvatar = currentUser?.is_creator && adminToken
@@ -254,7 +257,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
             <Button
               variant="danger"
               size="md"
-              onClick={() => revertMutation.mutate()}
+              onClick={() => setConfirmAction('revert')}
               disabled={revertMutation.isPending}
               className="w-full"
             >
@@ -263,12 +266,48 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
             <Button
               variant="outline"
               size="md"
-              onClick={() => revertMutation.mutate()}
+              onClick={() => setConfirmAction('archive')}
               disabled={revertMutation.isPending}
               className="w-full"
             >
               Archivar Asado <X size={16} />
             </Button>
+          </div>
+        )}
+
+        {/* Modal de confirmación */}
+        {confirmAction && (
+          <div className="fixed inset-0 z-[200] flex items-end justify-center">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setConfirmAction(null)} />
+            <div className="relative bg-surface rounded-t-[2rem] w-full max-w-md p-6 pb-10 animate-in slide-in-from-bottom-4 space-y-5 shadow-2xl">
+              <div className="w-10 h-10 rounded-full bg-primaryLight flex items-center justify-center">
+                <AlertTriangle size={20} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="font-heading font-extrabold text-lg text-onSurface">
+                  {confirmAction === 'revert' ? '¿Revertir la liquidación?' : '¿Archivar el asado?'}
+                </h3>
+                <p className="text-onSurfaceVariant text-[13px] mt-1 leading-relaxed">
+                  {confirmAction === 'revert'
+                    ? 'Se borrarán todas las deudas generadas y el evento volverá al estado abierto. Los pagos ya confirmados se perderán.'
+                    : 'El asado quedará cerrado y no podrá modificarse. Esta acción no se puede deshacer.'}
+                </p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="danger"
+                  size="md"
+                  className="w-full"
+                  disabled={revertMutation.isPending}
+                  onClick={() => { revertMutation.mutate(); setConfirmAction(null); }}
+                >
+                  {confirmAction === 'revert' ? 'Sí, revertir' : 'Sí, archivar'}
+                </Button>
+                <Button variant="ghost" size="md" className="w-full" onClick={() => setConfirmAction(null)}>
+                  Cancelar
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>

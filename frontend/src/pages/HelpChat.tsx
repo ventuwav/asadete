@@ -32,10 +32,7 @@ export default function HelpChat() {
     mutationFn: ({ message, history }: { message: string; history: Message[] }) =>
       api.chat.send(message, history),
     onSuccess: (data) => {
-      setMessages(prev => [
-        ...prev,
-        { role: 'model', text: data.response },
-      ]);
+      setMessages(prev => [...prev, { role: 'model', text: data.response }]);
     },
     onError: () => {
       setMessages(prev => [
@@ -54,21 +51,22 @@ export default function HelpChat() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fcf8f7] flex flex-col font-body text-[#1f1a17]">
-      <header className="flex items-center gap-3 px-6 pt-[max(1.5rem,env(safe-area-inset-top,1.5rem))] pb-4 border-b border-[#e8ded8]">
+    <div className="min-h-screen bg-surface flex flex-col font-body text-onSurface">
+      <header className="flex items-center gap-3 px-6 pt-[max(1.5rem,env(safe-area-inset-top,1.5rem))] pb-4 border-b border-outlineVariant">
         <button
+          aria-label="Volver"
           onClick={() => shareToken ? navigate(`/e/${shareToken}`) : navigate('/')}
-          className="w-9 h-9 rounded-full bg-[#f2ece9] flex items-center justify-center"
+          className="w-11 h-11 rounded-full bg-surfaceLow flex items-center justify-center"
         >
           <ArrowLeft size={18} />
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#f5e4df] flex items-center justify-center">
-            <Grill size={16} className="text-[#b83a0a]" fill="#b83a0a" />
+          <div className="w-9 h-9 rounded-full bg-primaryLight flex items-center justify-center">
+            <Grill size={16} className="text-primary" fill="currentColor" />
           </div>
           <div>
             <p className="text-[13px] font-heading font-bold leading-tight">Asistente asaDeTe</p>
-            <p className="text-[10px] text-[#7a706b]">Preguntame lo que necesites</p>
+            <p className="text-[10px] text-onSurfaceVariant">Preguntame lo que necesites</p>
           </div>
         </div>
       </header>
@@ -77,10 +75,10 @@ export default function HelpChat() {
         {messages.length === 0 && (
           <div className="space-y-6 animate-in fade-in">
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#f5e4df] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Grill size={14} className="text-[#b83a0a]" fill="#b83a0a" />
+              <div className="w-8 h-8 rounded-full bg-primaryLight flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Grill size={14} className="text-primary" fill="currentColor" />
               </div>
-              <div className="bg-white rounded-[1.25rem] rounded-tl-sm px-4 py-3 shadow-sm border border-[#e8ded8] max-w-[80%]">
+              <div className="bg-white rounded-card rounded-tl-sm px-4 py-3 shadow-sm border border-outlineVariant max-w-[80%]">
                 <p className="text-[13px] leading-relaxed">¡Hola! Soy el asistente de asaDeTe. ¿En qué te puedo ayudar?</p>
               </div>
             </div>
@@ -89,7 +87,7 @@ export default function HelpChat() {
                 <button
                   key={q}
                   onClick={() => send(q)}
-                  className="text-[11px] font-bold px-3 py-2 rounded-full border border-[#e8ded8] bg-white text-[#b83a0a] hover:bg-[#f5e4df] transition-colors active:scale-95"
+                  className="text-[11px] font-bold px-3 py-2 rounded-full border border-outlineVariant bg-white text-primary hover:bg-primaryLight transition-colors active:scale-95"
                 >
                   {q}
                 </button>
@@ -101,15 +99,15 @@ export default function HelpChat() {
         {messages.map((m, i) => (
           <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
             {m.role === 'model' && (
-              <div className="w-8 h-8 rounded-full bg-[#f5e4df] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Grill size={14} className="text-[#b83a0a]" fill="#b83a0a" />
+              <div className="w-8 h-8 rounded-full bg-primaryLight flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Grill size={14} className="text-primary" fill="currentColor" />
               </div>
             )}
             <div
-              className={`px-4 py-3 rounded-[1.25rem] max-w-[80%] text-[13px] leading-relaxed shadow-sm ${
+              className={`px-4 py-3 rounded-card max-w-[80%] text-[13px] leading-relaxed shadow-sm ${
                 m.role === 'user'
-                  ? 'bg-[#b83a0a] text-white rounded-tr-sm'
-                  : 'bg-white border border-[#e8ded8] rounded-tl-sm text-[#1f1a17]'
+                  ? 'bg-primary text-white rounded-tr-sm'
+                  : 'bg-white border border-outlineVariant rounded-tl-sm text-onSurface'
               }`}
             >
               {m.text}
@@ -119,14 +117,14 @@ export default function HelpChat() {
 
         {sendMutation.isPending && (
           <div className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#f5e4df] flex items-center justify-center flex-shrink-0">
-              <Grill size={14} className="text-[#b83a0a]" fill="#b83a0a" />
+            <div className="w-8 h-8 rounded-full bg-primaryLight flex items-center justify-center flex-shrink-0">
+              <Grill size={14} className="text-primary" fill="currentColor" />
             </div>
-            <div className="bg-white border border-[#e8ded8] rounded-[1.25rem] rounded-tl-sm px-4 py-3 shadow-sm">
+            <div className="bg-white border border-outlineVariant rounded-card rounded-tl-sm px-4 py-3 shadow-sm">
               <div className="flex gap-1 items-center h-4">
-                <span className="w-1.5 h-1.5 bg-[#b83a0a]/40 rounded-full animate-bounce [animation-delay:0ms]" />
-                <span className="w-1.5 h-1.5 bg-[#b83a0a]/40 rounded-full animate-bounce [animation-delay:150ms]" />
-                <span className="w-1.5 h-1.5 bg-[#b83a0a]/40 rounded-full animate-bounce [animation-delay:300ms]" />
+                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0ms]" />
+                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:150ms]" />
+                <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:300ms]" />
               </div>
             </div>
           </div>
@@ -135,7 +133,7 @@ export default function HelpChat() {
         <div ref={bottomRef} />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-[#fcf8f7] border-t border-[#e8ded8] px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0.75rem))]">
+      <div className="fixed bottom-0 left-0 right-0 bg-surface border-t border-outlineVariant px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0.75rem))]">
         <div className="flex gap-2 max-w-md mx-auto">
           <input
             type="text"
@@ -143,12 +141,13 @@ export default function HelpChat() {
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && send(input)}
             placeholder="Escribí tu pregunta..."
-            className="flex-1 bg-white border border-[#e8ded8] rounded-[1.25rem] px-4 py-3 text-[13px] outline-none focus:border-[#b83a0a] transition-colors"
+            className="flex-1 bg-white border border-outlineVariant rounded-card px-4 py-3 text-[13px] outline-none focus:border-primary transition-colors"
           />
           <button
+            aria-label="Enviar mensaje"
             onClick={() => send(input)}
             disabled={!input.trim() || sendMutation.isPending}
-            className="w-11 h-11 rounded-full bg-[#b83a0a] text-white flex items-center justify-center disabled:opacity-40 transition-opacity active:scale-95 flex-shrink-0"
+            className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-40 transition-opacity active:scale-95 flex-shrink-0"
           >
             <Send size={16} />
           </button>

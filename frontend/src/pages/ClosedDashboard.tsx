@@ -26,7 +26,7 @@ export default function ClosedDashboard({ data }: Props) {
       <div className="px-6 py-8 flex-1 flex flex-col items-center max-w-md mx-auto w-full text-center space-y-10 animate-in fade-in">
         <div className="relative">
           <div className="w-32 h-32 rounded-full bg-white shadow-xl shadow-primary/5 flex items-center justify-center mx-auto mb-8 border border-outlineVariant relative z-10">
-            <Grill className="text-primary" fill="#b83a0a" size={56} />
+            <Grill className="text-primary" fill="currentColor" size={56} />
           </div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primaryLight/50 rounded-full blur-3xl -z-10" />
           <h1 className="text-[40px] font-heading font-extrabold tracking-tight leading-10 mb-4 text-onSurface">¡Un aplauso<br />para el DT!</h1>

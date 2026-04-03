@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, User, Plus, ShoppingCart, CircleOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { api } from '../lib/api';
 
 interface Item { name: string; amount: string; }
@@ -42,9 +43,10 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
         : [];
 
       await api.events.editParticipant(shareToken, participant.id, { admin_token: adminToken, alias, expenses });
+      toast.success('¡Cambios guardados!');
       onSaved();
     } catch {
-      alert('Error al guardar cambios');
+      toast.error('No se pudieron guardar los cambios. Intentá de nuevo.');
     }
     setSaving(false);
   };

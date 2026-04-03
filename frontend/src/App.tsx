@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import CreateEvent from './pages/CreateEvent';
 import JoinEvent from './pages/JoinEvent';
 import Dashboard from './pages/Dashboard';
@@ -15,6 +16,22 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1e1a16',
+            color: '#faf7f4',
+            borderRadius: '1rem',
+            fontSize: '13px',
+            fontWeight: '600',
+            fontFamily: '"Plus Jakarta Sans", sans-serif',
+            padding: '12px 16px',
+          },
+          success: { iconTheme: { primary: '#1c7327', secondary: '#faf7f4' } },
+          error: { iconTheme: { primary: '#cc5b0a', secondary: '#faf7f4' } },
+        }}
+      />
       <Routes>
         <Route path="/" element={onboardingDone ? <CreateEvent /> : <OnboardingWizard onComplete={() => setOnboardingDone(true)} />} />
         <Route path="/e/:shareToken/share" element={<ShareEvent />} />
