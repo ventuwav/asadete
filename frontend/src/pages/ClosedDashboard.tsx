@@ -95,18 +95,24 @@ export default function ClosedDashboard({ data }: Props) {
           </h3>
           <p className="text-xs text-onSurfaceVariant font-medium leading-relaxed mb-6">Si disfrutaste la app, podés dejar una pequeña colaboración para seguir mejorando las herramientas del asador.</p>
           <div className="grid grid-cols-3 gap-3 mb-2">
-            <Card className="p-4 text-center">
-              <SectionLabel className="mb-1 block">Chico</SectionLabel>
-              <p className="font-heading font-bold text-[15px]">$500</p>
-            </Card>
-            <Card className="p-4 text-center border-2 border-primary flex flex-col items-center justify-center">
-              <SectionLabel variant="primary" className="mb-1 block">Recomendado</SectionLabel>
-              <p className="font-heading font-bold text-[15px]">$1000</p>
-            </Card>
-            <Card className="p-4 text-center">
-              <SectionLabel className="mb-1 block">Grande</SectionLabel>
-              <p className="font-heading font-bold text-[15px]">$2000</p>
-            </Card>
+            <a href="https://mpago.la/1ugH2SK" target="_blank" rel="noopener noreferrer">
+              <Card className="p-4 text-center hover:border-primary transition-colors active:scale-95">
+                <SectionLabel className="mb-1 block">Chico</SectionLabel>
+                <p className="font-heading font-bold text-[15px]">$1000</p>
+              </Card>
+            </a>
+            <a href="https://link.mercadopago.com.ar/asadete" target="_blank" rel="noopener noreferrer">
+              <Card className="p-4 text-center border-2 border-primary flex flex-col items-center justify-center hover:bg-primaryLight transition-colors active:scale-95">
+                <SectionLabel variant="primary" className="mb-1 block">Tu monto</SectionLabel>
+                <p className="font-heading font-bold text-[15px] text-primary">$...</p>
+              </Card>
+            </a>
+            <a href="https://mpago.la/173bLYF" target="_blank" rel="noopener noreferrer">
+              <Card className="p-4 text-center hover:border-primary transition-colors active:scale-95">
+                <SectionLabel className="mb-1 block">Grande</SectionLabel>
+                <p className="font-heading font-bold text-[15px]">$2000</p>
+              </Card>
+            </a>
           </div>
         </Card>
 
