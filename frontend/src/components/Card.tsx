@@ -13,10 +13,10 @@ interface CardProps {
 }
 
 const variants: Record<NonNullable<CardProps['variant']>, string> = {
-  default: 'bg-white rounded-card shadow-sm border border-outlineVariant/50',
-  surface: 'bg-surface border border-outlineVariant rounded-section shadow-sm',
+  default: 'bg-surface rounded-card shadow-card border border-outlineVariant/20',
+  surface: 'bg-surfaceLow border border-outlineVariant/20 rounded-section shadow-modal',
   muted:   'bg-surfaceHighest/50 rounded-section',
-  dark:    'bg-onSurface rounded-card',
+  dark:    'bg-surfaceDark rounded-hero',
 };
 
 export default function Card({ children, variant = 'default', className }: CardProps) {

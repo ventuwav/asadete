@@ -272,45 +272,54 @@ while debtors and creditors:
 
 ---
 
-## 10. Design System — "La República Serena"
+## 10. Design System — "Editorial Organic Brutalism" (upgrade de La República Serena)
+
+> Inspirado en el sistema Neo Fintech / Stitch. Se conservan fonts y tokens base; se adoptan extremos de radio, gradiente CTA, dark cards y glassmorphism en nav.
 
 ### Paleta de Colores
 | Token | Valor | Uso |
 |-------|-------|-----|
 | `surface` | `#faf7f4` | Background principal |
 | `surfaceLow` | `#f2ede8` | Cards ligeramente más oscuras |
-| `surfaceHighest` | `#e6dfd7` | Inputs, separadores, fondo de nav |
-| `primary` | `#cc5b0a` | Color principal (Amber cálido), botones CTA, logo |
+| `surfaceHighest` | `#e6dfd7` | Inputs, separadores |
+| `surfaceDark` | `#1B1C17` | Dark cards / panels de highlight |
+| `primary` | `#cc5b0a` | Color de marca, usos sin gradiente |
 | `primaryLight` | `#fae8dc` | Background suave de elementos primary |
-| `primaryDim` | `#a3470a` | Hover state de primary |
+| `primaryDim` | `#a3470a` | Inicio del gradiente CTA (dark end) |
+| `primaryBright` | `#FF8C5A` | Fin del gradiente CTA (bright end) |
 | `secondary` | `#2e2825` | Textos importantes secundarios |
 | `success` | `#1c7327` | Textos de confirmación |
 | `successBg` | `#96f39e` | Fondo de badges de éxito |
 | `onSurface` | `#1e1a16` | Texto principal (nunca `#000000` puro) |
 | `onSurfaceVariant` | `#7a706b` | Texto secundario / subtítulos |
-| `outlineVariant` | `#d9d0c8` | Borders muy sutiles |
+| `outlineVariant` | `#d9d0c8` | Ghost borders (usar siempre con `/20` opacity) |
+
+### Gradiente CTA
+- `bg-cta-gradient` → `linear-gradient(to bottom, #9E4216, #FF8C5A)`
+- Usar **solo** en botones CTA primarios. Nunca en fondos de sección.
 
 ### Tipografía
-- **Headings + Logo:** `TeX Gyre Adventor` (font-heading) — self-hosted en `/public/fonts/`, usado para todos los títulos, números y el logo "asaDeTe"
+- **Headings + Logo:** `TeX Gyre Adventor` (font-heading) — self-hosted en `/public/fonts/`
 - **Body:** `Inter` (font-body) — regular/medium para texto corrido y labels
 - **Labels de sección:** `text-[10px] font-bold tracking-widest uppercase text-onSurfaceVariant`
 
 ### Border Radius (tokens nombrados en tailwind.config.js)
-- `rounded-hero` (`2rem`) — Cards grandes, hero sections
+- `rounded-hero` (`3rem`) — Cards grandes, hero sections, dark cards
 - `rounded-section` (`1.5rem`) — Secciones / containers
 - `rounded-card` (`1.25rem`) — Cards, botones, inputs estándar
 - `rounded-inner` (`1rem`) — Inputs internos, elementos secundarios
 - `rounded-full` — Avatares, badges, pills
 
 ### Sombras (tokens nombrados en tailwind.config.js)
-- `shadow-cta` — Glow naranja para botones CTA primarios
+- `shadow-cta` — Glow naranja para botones CTA primarios (actualizado para primaryBright)
 - `shadow-card` — Elevación sutil para cards de contenido
+- `shadow-modal` — Sombra ultra-difusa para elementos flotantes (modals, sheets)
 
 ### Reglas de Diseño
-1. **Nunca usar `#000000` puro.** Usar `onSurface` (`#1e1a16`).
-2. **Sin gradientes.** Todos los fondos son colores planos.
-3. **Sin bordes agresivos.** Usar `border border-outlineVariant` (1px, sutil) o sin borde.
-4. **Sombras suaves:** `shadow-sm`, `shadow-card`, `shadow-cta` para CTAs.
+1. **Nunca usar `#000000` puro.** Usar `onSurface` (`#1e1a16`) o `surfaceDark` (`#1B1C17`).
+2. **Gradiente permitido solo en CTA.** Usar `bg-cta-gradient`. Nunca en fondos de sección ni cards.
+3. **Ghost borders:** Usar `border border-outlineVariant/20` — nunca opacity plena.
+4. **Sombras suaves:** `shadow-modal` para flotantes, `shadow-card` para contenido, `shadow-cta` para CTAs.
 5. **Micro-animaciones:** `animate-in fade-in`, `slide-in-from-top-4`, `active:scale-[0.98]`.
 6. **Botón CTA principal:** componente `<Button>` variant="cta" — nunca construirlo a mano.
 7. **Grill icon:** siempre `fill="currentColor"` — nunca valores hex hardcodeados.

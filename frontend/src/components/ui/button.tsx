@@ -7,12 +7,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        /** Botón CTA principal naranja */
-        cta: "bg-primary text-white rounded-card shadow-cta hover:bg-primaryDim",
+        /** Botón CTA principal naranja con gradiente */
+        cta: "bg-cta-gradient text-white rounded-full shadow-cta hover:opacity-90",
         /** Botón oscuro secundario */
-        secondary: "bg-onSurface text-white rounded-card hover:bg-black",
+        secondary: "bg-onSurface text-white rounded-full hover:opacity-90",
         /** Botón con borde, fondo claro */
-        outline: "border border-outlineVariant bg-surface text-onSurface hover:bg-surfaceLow rounded-card",
+        outline: "border border-outlineVariant/20 bg-surface text-onSurface hover:bg-surfaceLow rounded-full",
         /** Solo texto, sin fondo */
         ghost: "text-primary bg-primaryLight/0 hover:bg-primaryLight/30 rounded-card",
         /** Acción destructiva / advertencia */
