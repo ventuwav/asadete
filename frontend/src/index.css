@@ -20,11 +20,13 @@
 
 @layer base {
   html {
-    overflow-x: hidden;
+    overflow-x: clip;
+    height: 100%;
   }
   body {
     @apply bg-surface text-onSurface;
-    overflow-x: hidden;
+    overflow-x: clip;
+    min-height: 100svh;
     width: 100%;
   }
 }
