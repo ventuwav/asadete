@@ -279,7 +279,7 @@ export default function SettledDashboard({ shareToken, data, currentUser, adminT
         {confirmAction && (
           <div className="fixed inset-0 z-[200] flex items-end justify-center">
             <div className="absolute inset-0 bg-black/50" onClick={() => setConfirmAction(null)} />
-            <div className="relative bg-surface rounded-t-[2rem] w-full max-w-md p-6 pb-10 animate-in slide-in-from-bottom-4 space-y-5 shadow-2xl">
+            <div className="relative bg-surface rounded-t-hero w-full max-w-md p-6 pb-10 animate-in slide-in-from-bottom-4 space-y-5 shadow-modal">
               <div className="w-10 h-10 rounded-full bg-primaryLight flex items-center justify-center">
                 <AlertTriangle size={20} className="text-primary" />
               </div>

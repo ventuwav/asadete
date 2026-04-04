@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, User, Plus, ShoppingCart, CircleOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../lib/api';
+import { Button } from '../components/ui/button';
 
 interface Item { name: string; amount: string; }
 
@@ -23,7 +24,6 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
   });
   const [saving, setSaving] = useState(false);
 
-  // prevent body scroll while modal is open
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
@@ -41,7 +41,6 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
             items: items.map(it => ({ name: it.name, amount: parseFloat(it.amount) || 0 }))
           }]
         : [];
-
       await api.events.editParticipant(shareToken, participant.id, { admin_token: adminToken, alias, expenses });
       toast.success('¡Cambios guardados!');
       onSaved();
@@ -57,40 +56,48 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="relative bg-[#fcf8f7] rounded-t-[2rem] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-8 duration-300 shadow-2xl">
+      <div className="relative bg-surface rounded-t-hero max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-8 duration-300 shadow-modal">
         {/* Handle bar */}
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-[#d9d2ce]" />
+          <div className="w-10 h-1 rounded-full bg-outlineVariant" />
         </div>
 
         <div className="px-6 pb-10 pt-2 space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold tracking-widest uppercase text-[#b83a0a]">Editando gastos de</p>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#e8ded8] flex items-center justify-center hover:bg-[#d9d2ce]">
+            <p className="text-[10px] font-bold tracking-widest uppercase text-primary">Editando gastos de</p>
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-surfaceHighest flex items-center justify-center hover:bg-outlineVariant transition-colors">
               <X size={16} />
             </button>
           </div>
 
           {/* Identity card */}
-          <div className="flex items-center gap-4 bg-white border border-[#e8ded8] rounded-[1.25rem] p-4 shadow-sm">
-            <div className="w-11 h-11 rounded-full bg-[#b83a0a]/10 flex items-center justify-center text-[#b83a0a] shrink-0">
+          <div className="flex items-center gap-4 bg-white border border-outlineVariant/20 rounded-card p-4 shadow-card">
+            <div className="w-11 h-11 rounded-full bg-primaryLight flex items-center justify-center text-primary shrink-0">
               <User size={22} strokeWidth={2.5} />
             </div>
             <div>
-              <p className="font-heading font-extrabold text-[#1f1a17] text-lg leading-tight">{participant.name}</p>
-              <p className="text-[#a39a95] text-[10px] font-bold tracking-wider uppercase mt-0.5">Participante</p>
+              <p className="font-heading font-extrabold text-onSurface text-lg leading-tight">{participant.name}</p>
+              <p className="text-onSurfaceVariant text-[10px] font-bold tracking-wider uppercase mt-0.5">Participante</p>
             </div>
           </div>
 
           {/* ¿Compró algo? */}
           <div className="space-y-3">
-            <label className="text-[11px] font-bold tracking-widest text-[#5a504b] uppercase ml-1">¿Compró algo?</label>
+            <label className="text-[11px] font-bold tracking-widest text-secondary uppercase ml-1">¿Compró algo?</label>
             <div className="grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setHasExpense(false)} className={`py-5 rounded-[1.25rem] flex flex-col items-center gap-2 font-bold text-[14px] transition-all border-2 ${hasExpense === false ? 'bg-[#fcf8f7] border-[#b83a0a] text-[#b83a0a]' : 'bg-[#e8ded8]/50 border-transparent text-[#7a706b]'}`}>
+              <button
+                type="button"
+                onClick={() => setHasExpense(false)}
+                className={`py-5 rounded-card flex flex-col items-center gap-2 font-bold text-[14px] transition-all border-2 ${hasExpense === false ? 'bg-surface border-primary text-primary' : 'bg-surfaceHighest/50 border-transparent text-onSurfaceVariant'}`}
+              >
                 <CircleOff size={22} strokeWidth={2.5} /> No, nada
               </button>
-              <button type="button" onClick={() => setHasExpense(true)} className={`py-5 rounded-[1.25rem] flex flex-col items-center gap-2 font-bold text-[14px] transition-all border-2 ${hasExpense === true ? 'bg-[#fdf4f1] border-[#b83a0a] text-[#b83a0a]' : 'bg-[#e8ded8]/50 border-transparent text-[#7a706b]'}`}>
+              <button
+                type="button"
+                onClick={() => setHasExpense(true)}
+                className={`py-5 rounded-card flex flex-col items-center gap-2 font-bold text-[14px] transition-all border-2 ${hasExpense === true ? 'bg-primaryLight border-primary text-primary' : 'bg-surfaceHighest/50 border-transparent text-onSurfaceVariant'}`}
+              >
                 <ShoppingCart size={22} strokeWidth={2.5} /> Sí, gastó
               </button>
             </div>
@@ -98,28 +105,43 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
 
           {/* Expense items */}
           {hasExpense && (
-            <div className="bg-white border border-[#e8ded8] rounded-[1.5rem] p-5 space-y-5">
+            <div className="bg-white border border-outlineVariant/20 rounded-section p-5 space-y-5">
               {items.map((it, idx) => (
-                <div key={idx} className="space-y-3 p-4 bg-[#e8ded8]/30 rounded-[1.25rem] relative border border-[#e8ded8]/50">
+                <div key={idx} className="space-y-3 p-4 bg-surfaceHighest/30 rounded-card relative border border-outlineVariant/20">
                   {items.length > 1 && (
-                    <button type="button" onClick={() => removeItem(idx)} className="absolute -top-3 -right-3 bg-white text-[#b83a0a] border border-[#e8ded8] rounded-full p-1.5 shadow-sm hover:scale-110 transition-transform">
+                    <button type="button" onClick={() => removeItem(idx)} className="absolute -top-3 -right-3 bg-white text-primary border border-outlineVariant/20 rounded-full p-1.5 shadow-sm hover:scale-110 transition-transform">
                       <X size={14} />
                     </button>
                   )}
                   <div>
-                    <label className="text-[10px] font-bold tracking-widest text-[#5a504b] uppercase mb-1.5 block ml-1">Monto</label>
+                    <label className="text-[10px] font-bold tracking-widest text-secondary uppercase mb-1.5 block ml-1">Monto</label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5a504b] font-bold text-lg">$</span>
-                      <input type="number" value={it.amount} onChange={e => { const n = [...items]; n[idx].amount = e.target.value; setItems(n); }} placeholder="0.00" className="w-full bg-[#fcf8f7] border border-[#e8ded8]/80 rounded-[1rem] p-4 pl-9 font-bold text-[#1f1a17] text-lg focus:ring-2 focus:ring-[#b83a0a]/30 outline-none placeholder:text-[#a39a95]" />
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary font-bold text-lg">$</span>
+                      <input
+                        type="number"
+                        value={it.amount}
+                        onChange={e => { const n = [...items]; n[idx].amount = e.target.value; setItems(n); }}
+                        placeholder="0.00"
+                        className="w-full bg-surface border border-outlineVariant/20 rounded-inner p-4 pl-9 font-bold text-onSurface text-lg focus:ring-2 focus:ring-primary/30 outline-none placeholder:text-onSurfaceVariant"
+                      />
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold tracking-widest text-[#5a504b] uppercase mb-1.5 block ml-1">¿Qué compró?</label>
-                    <input value={it.name} onChange={e => { const n = [...items]; n[idx].name = e.target.value; setItems(n); }} placeholder="Ej: 3kg de asado, carbón..." className="w-full bg-[#fcf8f7] border border-[#e8ded8]/80 rounded-[1rem] p-4 font-bold text-[#1f1a17] text-sm focus:ring-2 focus:ring-[#b83a0a]/30 outline-none placeholder:text-[#a39a95] placeholder:font-normal" />
+                    <label className="text-[10px] font-bold tracking-widest text-secondary uppercase mb-1.5 block ml-1">¿Qué compró?</label>
+                    <input
+                      value={it.name}
+                      onChange={e => { const n = [...items]; n[idx].name = e.target.value; setItems(n); }}
+                      placeholder="Ej: 3kg de asado, carbón..."
+                      className="w-full bg-surface border border-outlineVariant/20 rounded-inner p-4 font-bold text-onSurface text-sm focus:ring-2 focus:ring-primary/30 outline-none placeholder:text-onSurfaceVariant placeholder:font-normal"
+                    />
                   </div>
                 </div>
               ))}
-              <button type="button" onClick={addItem} className="w-full py-3.5 border-2 border-dashed border-[#d9d2ce] rounded-[1.25rem] text-[12px] font-bold text-[#7a706b] flex items-center justify-center gap-2 hover:bg-[#e8ded8]/50 transition-colors">
+              <button
+                type="button"
+                onClick={addItem}
+                className="w-full py-3.5 border-2 border-dashed border-outlineVariant rounded-card text-[12px] font-bold text-onSurfaceVariant flex items-center justify-center gap-2 hover:bg-surfaceHighest/50 transition-colors"
+              >
                 <Plus size={16} /> Agregar otro ítem
               </button>
             </div>
@@ -127,14 +149,25 @@ export default function EditParticipantModal({ shareToken, adminToken, participa
 
           {/* Alias */}
           <div className="space-y-2">
-            <label className="text-[10px] font-bold tracking-widest text-[#b83a0a] uppercase ml-1">Alias o CBU <span className="text-[#a39a95] font-normal lowercase">(opcional)</span></label>
-            <input value={alias} onChange={e => setAlias(e.target.value)} placeholder="Para que le devuelvan la plata" className="w-full bg-[#fcf8f7] border border-[#e8ded8] shadow-inner rounded-[1rem] p-4 font-bold text-[#1f1a17] focus:ring-2 focus:ring-[#b83a0a]/30 outline-none placeholder:text-[#a39a95] placeholder:font-normal" />
+            <label className="text-[10px] font-bold tracking-widest text-primary uppercase ml-1">
+              Alias o CBU <span className="text-onSurfaceVariant font-normal lowercase">(opcional)</span>
+            </label>
+            <input
+              value={alias}
+              onChange={e => setAlias(e.target.value)}
+              placeholder="Para que le devuelvan la plata"
+              className="w-full bg-surface border border-outlineVariant/20 rounded-inner p-4 font-bold text-onSurface focus:ring-2 focus:ring-primary/30 outline-none placeholder:text-onSurfaceVariant placeholder:font-normal"
+            />
           </div>
 
           {/* Save button */}
-          <button onClick={handleSave} disabled={saving || hasExpense === null} className="w-full py-5 bg-[#b83a0a] text-white rounded-[1.25rem] text-[16px] font-heading font-bold shadow-[0_8px_30px_rgba(184,58,10,0.3)] flex justify-center items-center gap-2 hover:bg-[#8a2905] transition-all disabled:opacity-50">
+          <Button
+            onClick={handleSave}
+            disabled={saving || hasExpense === null}
+            className="w-full"
+          >
             {saving ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
