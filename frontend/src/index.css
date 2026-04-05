@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevenir zoom en iOS Safari — debe ir fuera de @layer para ganar a las utilidades de Tailwind */
+input, select, textarea {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+/* Eliminar spinners y scroll-to-change en number inputs */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 @font-face {
   font-family: 'TeX Gyre Adventor';
   src: url('/fonts/texgyreadventor-regular.otf') format('opentype');
@@ -30,18 +46,4 @@
     width: 100%;
   }
 
-  /* Prevenir zoom automático en iOS Safari al hacer focus en inputs */
-  input, select, textarea {
-    font-size: 16px;
-  }
-
-  /* Eliminar spinners y scroll-to-change en number inputs */
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
 }
