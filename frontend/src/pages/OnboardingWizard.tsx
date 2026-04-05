@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Users, Flame, CheckCircle } from 'lucide-react';
 import Grill from '../components/Grill';
 import { Button } from '../components/ui/button';
@@ -52,26 +52,33 @@ const slides = [
   },
 ];
 
+const SWIPE_THRESHOLD = 50;
+const DRAG_RESISTANCE = 0.4;
+
 export default function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
   const [current, setCurrent] = useState(0);
-  const [exiting, setExiting] = useState(false);
+  const [animDir, setAnimDir] = useState<'left' | 'right' | null>(null);
+  const [dragX, setDragX] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const isDragging = useRef(false);
 
-  // Warm up backend silently
   useEffect(() => {
     fetch(`${BASE}/ping`).catch(() => {});
   }, []);
 
-  const goNext = () => {
-    if (current < slides.length - 1) {
-      setExiting(true);
-      setTimeout(() => {
-        setCurrent(c => c + 1);
-        setExiting(false);
-      }, 200);
-    } else {
+  const navigate = (dir: 'next' | 'prev') => {
+    if (dir === 'next' && current >= slides.length - 1) {
       localStorage.setItem('asadete_onboarding_done', '1');
       onComplete();
+      return;
     }
+    if (dir === 'prev' && current === 0) return;
+
+    setAnimDir(dir === 'next' ? 'left' : 'right');
+    setTimeout(() => {
+      setCurrent(c => dir === 'next' ? c + 1 : c - 1);
+      setAnimDir(null);
+    }, 180);
   };
 
   const skip = () => {
@@ -79,29 +86,64 @@ export default function OnboardingWizard({ onComplete }: { onComplete: () => voi
     onComplete();
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || touchStartX.current === null) return;
+    const delta = e.touches[0].clientX - touchStartX.current;
+    // Resist dragging right on first slide, left on last slide
+    const isAtStart = current === 0 && delta > 0;
+    const isAtEnd = current === slides.length - 1 && delta < 0;
+    const resistance = isAtStart || isAtEnd ? DRAG_RESISTANCE * 0.3 : DRAG_RESISTANCE;
+    setDragX(delta * resistance);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging.current || touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    isDragging.current = false;
+    setDragX(0);
+    touchStartX.current = null;
+
+    if (delta < -SWIPE_THRESHOLD) navigate('next');
+    else if (delta > SWIPE_THRESHOLD) navigate('prev');
+  };
+
   const slide = slides[current];
 
+  const slideStyle: React.CSSProperties = {
+    transform: dragX !== 0
+      ? `translateX(${dragX}px)`
+      : animDir === 'left'
+        ? 'translateX(-40px)'
+        : animDir === 'right'
+          ? 'translateX(40px)'
+          : 'translateX(0)',
+    opacity: animDir ? 0 : 1,
+    transition: dragX !== 0 ? 'none' : 'transform 180ms ease, opacity 180ms ease',
+  };
+
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-between max-w-md mx-auto px-6 py-10 select-none">
+    <div
+      className="min-h-[100svh] bg-surface flex flex-col items-center justify-between max-w-md mx-auto px-6 py-10 select-none overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Skip */}
       <div className="w-full flex justify-end">
         {current < slides.length - 1 && (
-          <button
-            onClick={skip}
-            className="text-onSurfaceVariant text-sm font-medium px-2 py-1"
-          >
+          <button onClick={skip} className="text-onSurfaceVariant text-sm font-medium px-2 py-1">
             Omitir
           </button>
         )}
       </div>
 
       {/* Slide content */}
-      <div
-        className={`flex-1 flex flex-col items-center justify-center text-center transition-all duration-200 ${
-          exiting ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-        }`}
-      >
-        {/* Zona de ícono — altura fija para que no salte entre slides */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center" style={slideStyle}>
         <div className="h-40 flex flex-col items-center justify-center mb-6">
           {slide.icon}
         </div>
@@ -123,21 +165,23 @@ export default function OnboardingWizard({ onComplete }: { onComplete: () => voi
 
       {/* Bottom: dots + button */}
       <div className="w-full space-y-6">
-        {/* Dot indicators */}
         <div className="flex justify-center gap-2">
           {slides.map((_, i) => (
-            <div
+            <button
               key={i}
+              aria-label={`Ir al slide ${i + 1}`}
+              onClick={() => {
+                if (i > current) navigate('next');
+                else if (i < current) navigate('prev');
+              }}
               className={`rounded-full transition-all duration-300 ${
-                i === current
-                  ? 'w-6 h-2 bg-primary'
-                  : 'w-2 h-2 bg-outlineVariant'
+                i === current ? 'w-6 h-2 bg-primary' : 'w-2 h-2 bg-outlineVariant'
               }`}
             />
           ))}
         </div>
 
-        <Button onClick={goNext} className="w-full">
+        <Button onClick={() => navigate('next')} className="w-full">
           {slide.cta ?? 'Siguiente'}
         </Button>
       </div>
