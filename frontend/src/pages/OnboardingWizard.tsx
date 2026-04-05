@@ -12,8 +12,8 @@ const slides = [
         <div className="bg-white w-24 h-24 rounded-[1.5rem] flex items-center justify-center shadow-sm border border-outlineVariant/40">
           <Grill className="text-primary" fill="currentColor" size={52} />
         </div>
-        <span className="font-heading font-bold text-4xl tracking-wide text-primary leading-none">
-          asaDeTe
+        <span className="font-heading font-bold text-4xl tracking-wide text-white leading-none">
+          asa<span className="text-primaryBright">D</span>e<span className="text-primaryBright">T</span>e
         </span>
       </div>
     ),

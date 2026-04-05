@@ -67,7 +67,7 @@ export default function CreateEvent() {
           />
 
           <h1 className="font-heading font-bold text-[42px] tracking-wide text-white leading-none mb-2">
-            asaDeTe
+            asa<span className="text-primaryBright">D</span>e<span className="text-primaryBright">T</span>e
           </h1>
           <p className="text-white/40 text-[13px] font-medium text-center mb-10 leading-relaxed">
             Organizá los gastos, las deudas y<br />el fuego en un toque.

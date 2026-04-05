@@ -21,8 +21,8 @@ export default function AppHeader(props: AppHeaderProps) {
         <div className="bg-white w-20 h-20 mb-3 rounded-section flex items-center justify-center shadow-sm border border-outlineVariant/40">
           <Grill className="text-primary" fill="currentColor" size={40} />
         </div>
-        <span className="font-heading font-bold text-3xl tracking-wide text-primary leading-none">
-          asaDeTe
+        <span className="font-heading font-bold text-3xl tracking-wide text-onSurface leading-none">
+          asa<span className="text-primary">D</span>e<span className="text-primary">T</span>e
         </span>
         <span className="text-onSurfaceVariant font-bold text-[10px] tracking-widest uppercase mt-2">
           El DT de tu asado
@@ -41,8 +41,8 @@ export default function AppHeader(props: AppHeaderProps) {
     >
       <div className="flex items-center gap-2">
         <Grill className="text-primary" fill="currentColor" size={24} />
-        <span className="font-heading font-bold text-xl tracking-wide text-primary leading-none">
-          asaDeTe
+        <span className="font-heading font-bold text-xl tracking-wide text-onSurface leading-none">
+          asa<span className="text-primary">D</span>e<span className="text-primary">T</span>e
         </span>
       </div>
       {right}
