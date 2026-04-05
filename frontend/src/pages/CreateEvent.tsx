@@ -56,7 +56,7 @@ export default function CreateEvent() {
   // ── ESTADO INICIAL: pantalla oscura full ──────────────────────────
   if (!createdEvent) {
     return (
-      <div className="min-h-[100svh] bg-gradient-to-b from-secondary to-surfaceDark flex flex-col items-center px-6">
+      <div className="min-h-[100svh] bg-gradient-to-b from-[#4a4a4a] to-surfaceDark flex flex-col items-center px-6">
         {/* Contenido centrado */}
         <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md py-12 animate-in fade-in">
           <img
@@ -117,7 +117,7 @@ export default function CreateEvent() {
 
       <div className="w-full max-w-md px-6 pt-4 animate-in fade-in space-y-6">
         {/* Card éxito */}
-        <div className="bg-gradient-to-b from-secondary to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden border border-white/[0.06] shadow-modal animate-in fade-in zoom-in-95">
+        <div className="bg-gradient-to-b from-[#4a4a4a] to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden border border-white/[0.06] shadow-modal animate-in fade-in zoom-in-95">
           <img
             src="/logo-parrilla.png"
             alt="asaDeTe"

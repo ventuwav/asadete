@@ -34,7 +34,7 @@ export default {
         surface: '#faf7f4',
         surfaceLow: '#f2ede8',
         surfaceHighest: '#e6dfd7',
-        surfaceDark: '#1B1C17',
+        surfaceDark: '#3D3D3D',
         primary: '#cc5b0a',
         primaryLight: '#fae8dc',
         primaryDim: '#a3470a',
