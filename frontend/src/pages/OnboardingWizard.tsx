@@ -128,62 +128,64 @@ export default function OnboardingWizard({ onComplete }: { onComplete: () => voi
 
   return (
     <div
-      className="min-h-[100svh] bg-surface flex flex-col items-center justify-between max-w-md mx-auto px-6 py-10 select-none overflow-hidden"
+      className="min-h-[100svh] bg-gradient-to-b from-[#4a4a4a] to-surfaceDark flex flex-col items-center select-none overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Skip */}
-      <div className="w-full flex justify-end">
-        {current < slides.length - 1 && (
-          <button onClick={skip} className="text-onSurfaceVariant text-sm font-medium px-2 py-1">
-            Omitir
-          </button>
-        )}
-      </div>
-
-      {/* Slide content */}
-      <div className="flex-1 flex flex-col items-center justify-center text-center" style={slideStyle}>
-        <div className="h-40 flex flex-col items-center justify-center mb-6">
-          {slide.icon}
-        </div>
-
-        <div className="space-y-2 max-w-xs">
-          {slide.step && (
-            <span className="text-[10px] font-extrabold tracking-widest uppercase text-primary/60 block mb-3">
-              PASO {slide.step}
-            </span>
+      <div className="w-full max-w-md mx-auto px-6 py-10 flex flex-col flex-1 justify-between">
+        {/* Skip */}
+        <div className="w-full flex justify-end">
+          {current < slides.length - 1 && (
+            <button onClick={skip} className="text-white/30 text-sm font-medium px-2 py-1 hover:text-white/50 transition-colors">
+              Omitir
+            </button>
           )}
-          <h1 className="font-heading font-extrabold text-2xl text-onSurface leading-tight tracking-tight">
-            {slide.title}
-          </h1>
-          <p className="text-onSurfaceVariant text-[14px] leading-relaxed font-medium pt-1">
-            {slide.body}
-          </p>
-        </div>
-      </div>
-
-      {/* Bottom: dots + button */}
-      <div className="w-full space-y-6">
-        <div className="flex justify-center gap-2">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              aria-label={`Ir al slide ${i + 1}`}
-              onClick={() => {
-                if (i > current) navigate('next');
-                else if (i < current) navigate('prev');
-              }}
-              className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-6 h-2 bg-primary' : 'w-2 h-2 bg-outlineVariant'
-              }`}
-            />
-          ))}
         </div>
 
-        <Button onClick={() => navigate('next')} className="w-full">
-          {slide.cta ?? 'Siguiente'}
-        </Button>
+        {/* Slide content */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center" style={slideStyle}>
+          <div className="h-40 flex flex-col items-center justify-center mb-6">
+            {slide.icon}
+          </div>
+
+          <div className="space-y-2 max-w-xs">
+            {slide.step && (
+              <span className="text-[10px] font-extrabold tracking-widest uppercase text-primaryBright/70 block mb-3">
+                PASO {slide.step}
+              </span>
+            )}
+            <h1 className="font-heading font-extrabold text-2xl text-white leading-tight tracking-tight">
+              {slide.title}
+            </h1>
+            <p className="text-white/50 text-[14px] leading-relaxed font-medium pt-1">
+              {slide.body}
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom: dots + button */}
+        <div className="w-full space-y-6">
+          <div className="flex justify-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                aria-label={`Ir al slide ${i + 1}`}
+                onClick={() => {
+                  if (i > current) navigate('next');
+                  else if (i < current) navigate('prev');
+                }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === current ? 'w-6 h-2 bg-primaryBright' : 'w-2 h-2 bg-white/20'
+                }`}
+              />
+            ))}
+          </div>
+
+          <Button onClick={() => navigate('next')} className="w-full">
+            {slide.cta ?? 'Siguiente'}
+          </Button>
+        </div>
       </div>
     </div>
   );
