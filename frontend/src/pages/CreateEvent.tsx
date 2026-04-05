@@ -57,7 +57,7 @@ export default function CreateEvent() {
 
       <div className="w-full max-w-md px-6 pt-4 animate-in fade-in">
         {!createdEvent ? (
-          <div className="bg-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8">
+          <div className="bg-gradient-to-b from-secondary to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8 border border-white/[0.06] shadow-modal">
             {/* Grill ghost */}
             <div className="absolute right-0 bottom-0 opacity-[0.08] scale-150 translate-x-1/4 translate-y-1/4 text-white">
               <Grill size={200} fill="currentColor" />
@@ -90,7 +90,7 @@ export default function CreateEvent() {
             </form>
           </div>
         ) : (
-          <div className="bg-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8 animate-in fade-in zoom-in-95">
+          <div className="bg-gradient-to-b from-secondary to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8 animate-in fade-in zoom-in-95 border border-white/[0.06] shadow-modal">
             <div className="absolute right-0 bottom-0 opacity-[0.08] scale-150 translate-x-1/4 translate-y-1/4 text-white">
               <Grill size={200} fill="currentColor" />
             </div>
