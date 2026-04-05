@@ -29,4 +29,19 @@
     min-height: 100svh;
     width: 100%;
   }
+
+  /* Prevenir zoom automático en iOS Safari al hacer focus en inputs */
+  input, select, textarea {
+    font-size: 16px;
+  }
+
+  /* Eliminar spinners y scroll-to-change en number inputs */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
