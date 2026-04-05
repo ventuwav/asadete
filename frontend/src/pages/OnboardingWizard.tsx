@@ -9,9 +9,12 @@ const slides = [
   {
     icon: (
       <div className="flex flex-col items-center gap-3">
-        <div className="bg-white w-24 h-24 rounded-[1.5rem] flex items-center justify-center shadow-sm border border-outlineVariant/40">
-          <Grill className="text-primary" fill="currentColor" size={52} />
-        </div>
+        <img
+          src="/logo-parrilla.png"
+          alt="asaDeTe"
+          className="w-24 h-24 object-contain"
+          style={{ filter: 'hue-rotate(-25deg) saturate(1.4) brightness(1.05)' }}
+        />
         <span className="font-heading font-bold text-4xl tracking-wide text-white leading-none">
           asa<span className="text-primaryBright">D</span>e<span className="text-primaryBright">T</span>e
         </span>
