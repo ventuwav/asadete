@@ -95,38 +95,54 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
       <AppHeader variant="compact" right={userAvatar} />
 
       <div className="px-5 mt-2 relative z-10 w-full max-w-md mx-auto flex-1">
-        {/* Stats */}
-        <div className="mb-6">
-          <div className="flex justify-between items-end mb-4">
-            <div>
-              <p className="text-onSurfaceVariant text-xs font-bold mb-1 uppercase tracking-wider">Total asaDeTe</p>
-              <h2 className="text-4xl font-heading font-extrabold tracking-tight text-primary">${total_pool.toLocaleString('es-AR')}</h2>
+        {/* Hero card Neo Fintech */}
+        <div className="bg-surfaceDark rounded-hero p-6 mb-8 relative overflow-hidden">
+          {/* Grill ghost */}
+          <div className="absolute -right-6 -top-6 opacity-[0.07] text-white pointer-events-none">
+            <Grill size={140} fill="currentColor" />
+          </div>
+
+          {/* Total */}
+          <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1 relative z-10">Total asaDeTe</p>
+          <h2 className="text-[42px] font-heading font-extrabold tracking-tight text-white leading-none mb-5 relative z-10">
+            ${total_pool.toLocaleString('es-AR')}
+          </h2>
+
+          {/* Divider */}
+          <div className="border-t border-white/10 mb-4" />
+
+          {/* Stats row */}
+          <div className="flex items-start justify-between relative z-10">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <User size={15} className="text-white/70" />
+              </div>
+              <div>
+                <p className="text-white font-heading font-extrabold text-lg leading-none">{data.participants.length}</p>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider mt-0.5">Invitados</p>
+              </div>
+            </div>
+
+            <div className="w-px h-8 bg-white/10 self-center" />
+
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <Wallet size={15} className="text-primaryBright/80" />
+              </div>
+              <div>
+                <p className="text-white font-heading font-extrabold text-lg leading-none">
+                  ${myShare.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                </p>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider mt-0.5">Tu cuota</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 self-center">
+              <span className="w-1.5 h-1.5 rounded-full bg-primaryBright/60 animate-pulse" />
+              <span className="text-white/40 text-[9px] font-bold uppercase tracking-wider">Asignando</span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="p-4 flex flex-col gap-1.5">
-              <User className="text-primary" size={18} />
-              <span className="text-2xl font-heading font-extrabold text-onSurface">{data.participants.length}</span>
-              <SectionLabel>Invitados</SectionLabel>
-            </Card>
-            <Card className="p-4 flex flex-col gap-1.5">
-              <Wallet className="text-success" size={18} />
-              <span className="text-2xl font-heading font-extrabold text-onSurface">${total_pool.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
-              <SectionLabel>En gastos</SectionLabel>
-            </Card>
-          </div>
         </div>
-
-        <Card className="flex justify-between items-center p-4 rounded-2xl mb-8">
-          <div>
-            <SectionLabel className="mb-1">Tu cuota actual</SectionLabel>
-            <p className="font-heading font-extrabold text-success text-xl">${myShare.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</p>
-          </div>
-          <div className="text-right flex flex-col items-end gap-1">
-            <SectionLabel>Estado</SectionLabel>
-            <div className="bg-surfaceHighest text-onSurfaceVariant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Asignando Gastos</div>
-          </div>
-        </Card>
 
         {/* Tab switcher */}
         <div className="flex bg-surfaceHighest p-1 rounded-inner mb-8">
