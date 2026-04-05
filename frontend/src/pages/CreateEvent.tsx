@@ -58,10 +58,12 @@ export default function CreateEvent() {
       <div className="w-full max-w-md px-6 pt-4 animate-in fade-in">
         {!createdEvent ? (
           <div className="bg-gradient-to-b from-secondary to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8 border border-white/[0.06] shadow-modal">
-            {/* Grill ghost */}
-            <div className="absolute right-0 bottom-0 opacity-[0.08] scale-150 translate-x-1/4 translate-y-1/4 text-white">
-              <Grill size={200} fill="currentColor" />
-            </div>
+            <img
+              src="/logo-parrilla.png"
+              alt="asaDeTe"
+              className="w-36 h-36 object-contain mb-6 relative z-10"
+              style={{ filter: 'hue-rotate(-25deg) saturate(1.4) brightness(1.05)' }}
+            />
 
             <SectionLabel variant="primary" className="mb-3 relative z-10">¡Hola, Prepará la táctica!</SectionLabel>
             <h1 className="text-[36px] font-heading font-extrabold tracking-tight text-white mb-3 relative z-10 leading-[1.05] text-center">¿Sale ese<br />asado?</h1>
@@ -91,9 +93,12 @@ export default function CreateEvent() {
           </div>
         ) : (
           <div className="bg-gradient-to-b from-secondary to-surfaceDark rounded-hero p-8 flex flex-col items-center relative overflow-hidden mb-8 animate-in fade-in zoom-in-95 border border-white/[0.06] shadow-modal">
-            <div className="absolute right-0 bottom-0 opacity-[0.08] scale-150 translate-x-1/4 translate-y-1/4 text-white">
-              <Grill size={200} fill="currentColor" />
-            </div>
+            <img
+              src="/logo-parrilla.png"
+              alt="asaDeTe"
+              className="w-24 h-24 object-contain mb-5 relative z-10 opacity-80"
+              style={{ filter: 'hue-rotate(-25deg) saturate(1.4) brightness(1.05)' }}
+            />
             <span className="bg-successBg/20 text-successBg text-[9px] font-extrabold px-3 py-1 rounded-full tracking-widest uppercase mb-5 relative z-10 border border-successBg/20">ACTIVO</span>
             <h1 className="text-[32px] font-heading font-extrabold tracking-tight text-white relative z-10 leading-tight mb-2 text-center">{name}</h1>
             <p className="text-white/50 text-[13px] font-medium relative z-10">Tu asado está listo para arrancar.</p>
