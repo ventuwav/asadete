@@ -96,7 +96,7 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
 
       <div className="px-5 mt-2 relative z-10 w-full max-w-md mx-auto flex-1">
         {/* Hero card Neo Fintech */}
-        <div className="bg-surfaceDark rounded-hero p-6 mb-8 relative overflow-hidden">
+        <div className="bg-cta-gradient rounded-hero p-6 mb-8 relative overflow-hidden shadow-cta">
           {/* Grill ghost */}
           <div className="absolute -right-6 -top-6 opacity-[0.07] text-white pointer-events-none">
             <Grill size={140} fill="currentColor" />
@@ -127,7 +127,7 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
 
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                <Wallet size={15} className="text-primaryBright/80" />
+                <Wallet size={15} className="text-white/70" />
               </div>
               <div>
                 <p className="text-white font-heading font-extrabold text-lg leading-none">
@@ -138,7 +138,7 @@ export default function OpenDashboard({ shareToken, data, currentUser, adminToke
             </div>
 
             <div className="flex items-center gap-1.5 self-center">
-              <span className="w-1.5 h-1.5 rounded-full bg-primaryBright/60 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
               <span className="text-white/40 text-[9px] font-bold uppercase tracking-wider">Asignando</span>
             </div>
           </div>
