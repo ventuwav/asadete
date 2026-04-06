@@ -6,6 +6,7 @@ import eventsRouter from './routes/events';
 import debtsRouter from './routes/debts';
 import itemsRouter from './routes/items';
 import chatRouter from './routes/chat';
+import adminRouter from './routes/admin';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use('/api/events', eventsRouter);
 app.use('/api/debts', debtsRouter);
 app.use('/api/items', itemsRouter);
 app.use('/api/chat', chatRouter);
+app.use('/api/admin', adminRouter);
 
 app.use(errorHandler);
 
